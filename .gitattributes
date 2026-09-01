@@ -1,0 +1,11 @@
+# Shell scripts must stay LF even when checked out on Windows, or sh chokes on the CRLF
+# shebang -- "bad interpreter: /bin/sh^M". The git hooks need their own rule because a hook
+# is named for the event it serves (pre-push, commit-msg) and therefore has no extension for
+# a pattern to match on.
+#
+# Deliberately narrow. A blanket "* text=auto" here would renormalise every .cpp and .h in
+# the repository in one commit, which is a diff nobody can review and a bisect boundary
+# nobody wants. Same reasoning as the sibling Msgcore repository's .gitattributes.
+
+*.sh             text eol=lf
+tools/hooks/**   text eol=lf

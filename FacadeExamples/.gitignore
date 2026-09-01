@@ -1,0 +1,9 @@
+# Single build output root, shared by all eight harnesses:
+#   out\<Platform>\<Configuration>\            exes + staged runtime DLLs
+#   out\<Platform>\<Configuration>\obj\<Proj>\ intermediates
+# Pinned in common\Light.props, so no .vcxproj here says anything about paths.
+out/
+
+logs/
+.vs/
+*.user

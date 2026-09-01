@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Copyright 2026 Khrustal & Mann
+                MELBOURNE, VICTORIA, AUSTRALIA, 3000
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+   implied. See the License for the specific language governing
+   permissions and limitations under the License.
+-->
+<!--
+  Light.props : every setting all eight Light harnesses share.
+
+  A MsgFacade client needs exactly three things, and this file is the proof of
+  how few they are: one include directory, one import library, and the DLLs
+  beside the exe. No MFC (no <UseOfMfc>), no Msgcore include path, no
+  precompiled header, no stdafx.
+
+  Compare the originals in ..\DirectExamples, whose every project carries
+  <UseOfMfc>Dynamic</UseOfMfc>, an include list reaching into Msgcore\ and
+  TargetCore\, and a per-project stdafx.h/.cpp pair.
+
+  Two harnesses (WsaStoreTest, WsaQueryTest) also speak to the MESSAGING
+  kernel, and set LightNeedsMesh=true in their Globals property group. That
+  adds the SECOND facade (TargetFacade) and nothing else: still no MFC and
+  still no kernel headers.
+
+  All projects build into ONE output directory so the runtime DLLs are staged
+  once and every harness finds them.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup Label="LightPaths">
+    <LightRoot>$(MSBuildThisFileDirectory)..\</LightRoot>
+    <MsgFacadeRoot>$(MSBuildThisFileDirectory)..\..\..\MsgFacade\</MsgFacadeRoot>
+    <TargetFacadeRoot>$(MSBuildThisFileDirectory)..\..\..\TargetFacade\</TargetFacadeRoot>
+    <McsBinRoot>$(MSBuildThisFileDirectory)..\..\..\bin\</McsBinRoot>
+    <LightCoreDir Condition="'$(Configuration)'=='Debug'">$(McsBinRoot)Debug64\</LightCoreDir>
+    <LightCoreDir Condition="'$(Configuration)'=='Release'">$(McsBinRoot)Release64\</LightCoreDir>
+  </PropertyGroup>
+
+  <!-- One output root for all eight harnesses: out\<Platform>\<Configuration>\
+       for the exes, with intermediates in obj\<ProjectName>\ underneath. -->
+  <PropertyGroup>
+    <OutDir>$(LightRoot)out\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(LightRoot)out\$(Platform)\$(Configuration)\obj\$(ProjectName)\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <LinkIncremental Condition="'$(Configuration)'=='Debug'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)'=='Release'">false</LinkIncremental>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)'=='Debug'">_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)'=='Release'">NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Optimization Condition="'$(Configuration)'=='Debug'">Disabled</Optimization>
+      <Optimization Condition="'$(Configuration)'=='Release'">MaxSpeed</Optimization>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Release'">MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <!-- The facade's public headers and the shared harness helper. That is all. -->
+      <AdditionalIncludeDirectories>$(MsgFacadeRoot)include;$(MSBuildThisFileDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(LightNeedsMesh)'=='true'">$(TargetFacadeRoot)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>MsgFacade.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(LightNeedsMesh)'=='true'">TargetFacade.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MsgFacadeRoot)out\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(LightNeedsMesh)'=='true'">$(TargetFacadeRoot)out\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command Condition="'$(LightNeedsMesh)'!='true'">xcopy /Y /D "$(MsgFacadeRoot)out\$(Platform)\$(Configuration)\MsgFacade.dll" "$(OutDir)"
+xcopy /Y /D "$(LightCoreDir)Msgcore.dll" "$(OutDir)"</Command>
+      <Command Condition="'$(LightNeedsMesh)'=='true'">xcopy /Y /D "$(MsgFacadeRoot)out\$(Platform)\$(Configuration)\MsgFacade.dll" "$(OutDir)"
+xcopy /Y /D "$(TargetFacadeRoot)out\$(Platform)\$(Configuration)\TargetFacade.dll" "$(OutDir)"
+xcopy /Y /D "$(LightCoreDir)TargetCore.dll" "$(OutDir)"
+xcopy /Y /D "$(LightCoreDir)Msgcore.dll" "$(OutDir)"</Command>
+      <Message>staging facade + kernel DLLs</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+
+</Project>

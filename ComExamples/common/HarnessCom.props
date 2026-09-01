@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2026 Khrustal & Mann
+               MELBOURNE, VICTORIA, AUSTRALIA, 3000
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+  implied. See the License for the specific language governing
+  permissions and limitations under the License.
+
+  HarnessCom.props : everything the eight harnesses share.
+
+  The one thing worth reading here is what is NOT in it. There is no
+  AdditionalDependencies naming a single MSCS import library, and no post-build
+  step staging Msgcore.dll or TargetCore.dll next to the exe. These programs
+  link ole32/oleaut32/uuid and nothing else; the implementation is found in the
+  REGISTRY at run time, in whatever directory the registered server happens to
+  live in. That is the distinguishing property of this tree against its two
+  siblings, and it is visible as an absence in this file.
+
+  The include path is the MIDL OUTPUT directory of MsgcoreCom, so that server
+  must be built before anything here compiles. MsgcoreCom_h.h and
+  MsgcoreCom_i.c are generated, not checked in, which is deliberate: a stale
+  copy of a generated header is how a client ends up calling one vtable slot
+  and reaching another.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TreeRoot>$(MSBuildThisFileDirectory)..\</TreeRoot>
+    <!-- TreeRoot is ComExamples\, which sits inside the combined repository, so
+         the MSCS solution root is two levels above it and not one. -->
+    <MscsRoot>$(TreeRoot)..\..\</MscsRoot>
+
+    <!-- MIDL output of MsgFacade\com\MsgcoreCom(2022).vcxproj. The server moved
+         there when it was ported off Msgcore's flat C ABI onto MsgFacade; it
+         used to live in Msgcore\com. -->
+    <MsgcoreComGen>$(MscsRoot)MsgFacade\com\out\$(Platform)\$(Configuration)\obj</MsgcoreComGen>
+    <!-- MIDL output of TargetFacade\com\TargetCom(2022).vcxproj (harnesses 5 and 6 only) -->
+    <TargetComGen>$(MscsRoot)TargetFacade\out\$(Platform)\$(Configuration)\obj\TargetCom</TargetComGen>
+
+    <OutDir>$(TreeRoot)out\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(TreeRoot)out\$(Platform)\$(Configuration)\obj\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(MsgcoreComGen);$(TreeRoot)common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <SDLCheck>false</SDLCheck>
+      <!-- No precompiled header: each harness is one translation unit, and the
+           point of that is that a reader can open the .cpp and see everything
+           the program does. -->
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ole32.lib;oleaut32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- The generated header is the one prerequisite that is not a source file,
+       so its absence is reported as a sentence rather than as C1083 on a
+       #include the reader did not write. -->
+  <Target Name="CheckMsgcoreComGenerated" BeforeTargets="ClCompile">
+    <Error Condition="!Exists('$(MsgcoreComGen)\MsgcoreCom_h.h')"
+           Text="MsgcoreCom_h.h not found in $(MsgcoreComGen). Build MsgFacade\com\MsgcoreCom(2022).vcxproj for $(Configuration)|$(Platform) first -- these harnesses compile against its MIDL output and link nothing of MSCS." />
+  </Target>
+
+</Project>

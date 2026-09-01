@@ -1,0 +1,105 @@
+# Copyright © 2026 Khrustal & Mann
+#              MELBOURNE, VICTORIA, AUSTRALIA, 3000
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied. See the License for the specific language governing
+# permissions and limitations under the License.
+#
+# =============================================================================
+# CI -- everything this repository can verify ABOUT ITSELF.
+#
+# READ THIS BEFORE TRUSTING A GREEN TICK FROM THIS WORKFLOW.
+#
+# The four trees here are examples OF a library that is not published alongside
+# them. `..\..\..\Msgcore`, `..\..\..\MsgFacade`, `..\..\..\TargetCore`,
+# `..\..\..\TargetFacade`, `..\..\..\lib`, `..\..\..\bin` and
+# `..\..\..\vsutils` are peer directories of a parent solution this repository
+# is checked out inside; they are not submodules and not vendored. README.md
+# "The sibling dependencies" documents every binding. The consequence for CI is
+# blunt:
+#
+#   *** NOT ONE LINE OF C++ IN THIS REPOSITORY IS COMPILED BY THIS WORKFLOW. ***
+#
+# A workflow that is green while verifying nothing is worse than no workflow, so
+# this one is scoped to the claims it can actually discharge, and the header of
+# .github/ci/check_repo_invariants.py states its own limits in full.
+#
+# What the single job here establishes:
+#
+#   * the legal and release files are present at the root, every tree carries
+#     the README.md and the runner the root README links to, and every
+#     DirectExamples harness directory still carries its own README.md;
+#   * every .vcxproj on disk is registered in ITS TREE'S solution FOR BOTH
+#     CONFIGURATIONS, and every project a solution names exists -- a harness
+#     that nothing builds rots silently, which is the failure this catches;
+#   * every source those projects compile exists where they say it does;
+#   * the set of paths reaching OUTSIDE this repository is unchanged, per tree,
+#     and so is the set the common\*.props files construct. That pins the
+#     standalone-build story AND the shape of the repository: each tree is one
+#     directory deeper than it was when it was a repository of its own, so a
+#     `..\..\` that should have become `..\..\..\` fails HERE rather than at
+#     link time;
+#   * the shipped Markdown does not link to files that are gone.
+#
+# What it does NOT cover, on the record: compilation, linking, and every runtime
+# property of any harness in any tree -- including the 405 checks a full
+# DirectExamples run makes per configuration. That is solution-build.yml's job,
+# it needs the siblings supplied to it, and it is workflow_dispatch-only for
+# exactly that reason.
+#
+# The name of this workflow is load-bearing: tools/hooks/pre-push looks for a
+# run named "CI" on the exact SHA before it will allow a push to master. Renaming
+# it silently disables that hook.
+# =============================================================================
+
+name: CI
+
+# Every branch, not just master. tools/hooks/pre-push refuses to put a commit on
+# master until that exact SHA has gone green, and the only way to earn a green is
+# to push the branch first -- so a trigger restricted to master would leave the
+# hook demanding a run that could never happen.
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [master, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A superseded run of an in-flight branch tells you nothing worth paying for.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  invariants:
+    name: repository invariants (no compiler)
+    # ubuntu-latest, not windows. Nothing here needs MSBuild, it is the cheapest
+    # runner, and running the Markdown link check on a case-SENSITIVE filesystem
+    # is the stricter choice: a link whose case is wrong resolves on Windows and
+    # 404s here -- and here is where the GitHub web view resolves it too.
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Check repository invariants
+        run: python3 .github/ci/check_repo_invariants.py
+
+      - name: State what was and was not verified
+        if: always()
+        run: |
+          echo "Verified: per-tree solution/project bookkeeping, source presence,"
+          echo "          pinned external references and .props paths, Markdown links."
+          echo "NOT verified: compilation, linking, or any runtime behaviour of"
+          echo "          any harness in any of the four trees. See solution-build.yml."

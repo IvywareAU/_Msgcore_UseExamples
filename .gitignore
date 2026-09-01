@@ -1,0 +1,14 @@
+# Build output. Each of the four trees keeps its own root and its own .gitignore
+# saying what lands there; these patterns are unanchored so they hold at every
+# depth, which is what makes them survive a tree being moved.
+#
+#   <Tree>\out\<Platform>\<Configuration>\            exes + staged runtime DLLs
+#   <Tree>\out\<Platform>\<Configuration>\obj\<Proj>\ intermediates
+#
+# Pinned per tree: in each .vcxproj in DirectExamples, in common\*.props in
+# ComExamples and FacadeExamples, and in build.ps1 in dotNetExamples.
+out/
+
+logs/
+.vs/
+*.user

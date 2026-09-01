@@ -1,0 +1,12 @@
+# Single build output root, matching the sibling trees:
+#   out\x64\<Configuration>\   the eight exes + the STAGED runtime DLLs
+# Set in build.ps1. x64 by construction, not AnyCPU -- see the TARGET note there.
+#
+# The staged DLLs (MsgcoreCom, TargetCom, TargetFacade, Msgcore, TargetCore) are
+# copies build.ps1 makes so that ONE Msgcore.dll is on the search path for both
+# servers -- see the header of run_all.ps1. They are build output like any other.
+out/
+
+logs/
+.vs/
+*.user

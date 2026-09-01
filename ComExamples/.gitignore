@@ -1,0 +1,15 @@
+# Single build output root, shared by all eight examples:
+#   out\<Platform>\<Configuration>\            exes + the STAGED COM servers
+#   out\<Platform>\<Configuration>\obj\<Proj>\ intermediates
+# Pinned in common\HarnessCom.props. There is one solution for the whole tree --
+# as in the sibling _TargetCore_UseExamples* trees -- so the folder fills up eight
+# targets at a time; the eight target names are distinct, so they cannot collide.
+#
+# The staged DLLs (MsgcoreCom, TargetCom, TargetFacade, Msgcore, TargetCore) are
+# copies run_all.ps1 makes so that ONE Msgcore.dll is on the search path for both
+# servers -- see the header of that script. They are build output like any other.
+out/
+
+logs/
+.vs/
+*.user
