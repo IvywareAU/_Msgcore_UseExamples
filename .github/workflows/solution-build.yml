@@ -44,7 +44,7 @@
 #   Platform/             Taken from Msgcore's VENDORED copy (Msgcore/Platform),
 #                         which Msgcore's own hygiene job pins to an upstream
 #                         commit. TargetCore's stdafx.h includes
-#                         "../Platform/platform.h", so it must exist as a peer.
+#                         "../Msgcore/Platform/platform.h", so it must exist as a peer.
 #   vsutils/              NOT PUBLISHED ANYWHERE. Two of the eight harnesses
 #                         compile ..\..\..\vsutils\DelayLoadReport.cpp, so this
 #                         workflow cannot be run without being told where to
@@ -210,7 +210,7 @@ jobs:
           # Platform/ is not a repository of its own here. Msgcore vendors a copy
           # and its hygiene job pins that copy to an upstream commit, so it is the
           # authoritative one available to CI. TargetCore's stdafx.h includes
-          # "../Platform/platform.h" and will not compile without it.
+          # "../Msgcore/Platform/platform.h" and will not compile without it.
           Copy-Item "$env:MSCS/Msgcore/Platform" "$env:MSCS/Platform" -Recurse -Force
           Copy-Item "${{ github.workspace }}/parent/vsutils" "$env:MSCS/vsutils" -Recurse -Force
 
