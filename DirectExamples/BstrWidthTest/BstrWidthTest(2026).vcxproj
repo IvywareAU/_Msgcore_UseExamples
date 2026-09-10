@@ -27,9 +27,9 @@
   </ItemGroup>
 
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8E1C0A21-4D33-4F10-9A51-0B7C2D3E4F07}</ProjectGuid>
-    <ProjectName>RecursTimeTest</ProjectName>
-    <RootNamespace>RecursTimeTest</RootNamespace>
+    <ProjectGuid>{8E1C0A21-4D33-4F10-9A51-0B7C2D3E4F08}</ProjectGuid>
+    <ProjectName>BstrWidthTest</ProjectName>
+    <RootNamespace>BstrWidthTest</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -40,14 +40,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <UseDebugLibraries>true</UseDebugLibraries>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
 
@@ -70,13 +70,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\obj\$(ProjectName)\</IntDir>
-    <TargetName>RecursTimeTest</TargetName>
+    <TargetName>BstrWidthTest</TargetName>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\obj\$(ProjectName)\</IntDir>
-    <TargetName>RecursTimeTest</TargetName>
+    <TargetName>BstrWidthTest</TargetName>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
 
@@ -158,13 +158,13 @@ if not exist "$(OutDir)Msgcore.dll" echo POSTBUILD ERROR: Msgcore.dll not found 
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="RecursTimeTest.cpp" />
+    <ClCompile Include="BstrWidthTest.cpp" />
   </ItemGroup>
 
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Targetver.h" />
-    <ClInclude Include="RecursTimeTest.h" />
+    <ClInclude Include="BstrWidthTest.h" />
   </ItemGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -104,7 +104,7 @@ never defined — an unresolved external, the same shape as `P3PmsgList::GetPrev
 ## Build and run
 
 ```powershell
-& $msbuild ".\RecursTimeTest(2022).vcxproj" /p:Configuration=Debug /p:Platform=x64
+& $msbuild ".\RecursTimeTest(2026).vcxproj" /p:Configuration=Debug /p:Platform=x64
 ..\out\x64\Debug\RecursTimeTest.exe
 ```
 

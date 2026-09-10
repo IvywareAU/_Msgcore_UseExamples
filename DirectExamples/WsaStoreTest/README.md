@@ -82,7 +82,7 @@ is the barrier that makes that safe; the counters are `Interlocked`.
 ## Build and run
 
 ```powershell
-& $msbuild ".\WsaStoreTest(2022).vcxproj" /p:Configuration=Debug /p:Platform=x64
+& $msbuild ".\WsaStoreTest(2026).vcxproj" /p:Configuration=Debug /p:Platform=x64
 ..\out\x64\Debug\WsaStoreTest.exe
 ```
 

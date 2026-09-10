@@ -39,11 +39,11 @@
          the MSCS solution root is two levels above it and not one. -->
     <MscsRoot>$(TreeRoot)..\..\</MscsRoot>
 
-    <!-- MIDL output of MsgFacade\com\MsgcoreCom(2022).vcxproj. The server moved
+    <!-- MIDL output of MsgFacade\com\MsgcoreCom(2026).vcxproj. The server moved
          there when it was ported off Msgcore's flat C ABI onto MsgFacade; it
          used to live in Msgcore\com. -->
     <MsgcoreComGen>$(MscsRoot)MsgFacade\com\out\$(Platform)\$(Configuration)\obj</MsgcoreComGen>
-    <!-- MIDL output of TargetFacade\com\TargetCom(2022).vcxproj (harnesses 5 and 6 only) -->
+    <!-- MIDL output of TargetFacade\com\TargetCom(2026).vcxproj (harnesses 5 and 6 only) -->
     <TargetComGen>$(MscsRoot)TargetFacade\out\$(Platform)\$(Configuration)\obj\TargetCom</TargetComGen>
 
     <OutDir>$(TreeRoot)out\$(Platform)\$(Configuration)\</OutDir>
@@ -98,7 +98,7 @@
        #include the reader did not write. -->
   <Target Name="CheckMsgcoreComGenerated" BeforeTargets="ClCompile">
     <Error Condition="!Exists('$(MsgcoreComGen)\MsgcoreCom_h.h')"
-           Text="MsgcoreCom_h.h not found in $(MsgcoreComGen). Build MsgFacade\com\MsgcoreCom(2022).vcxproj for $(Configuration)|$(Platform) first -- these harnesses compile against its MIDL output and link nothing of MSCS." />
+           Text="MsgcoreCom_h.h not found in $(MsgcoreComGen). Build MsgFacade\com\MsgcoreCom(2026).vcxproj for $(Configuration)|$(Platform) first -- these harnesses compile against its MIDL output and link nothing of MSCS." />
   </Target>
 
 </Project>

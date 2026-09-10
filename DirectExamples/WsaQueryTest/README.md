@@ -95,7 +95,7 @@ data symbol '...P2PeerHub::P2PeerMsgMap'; link without /DELAYLOAD:TargetCore.dll
 ## Build and run
 
 ```powershell
-& $msbuild ".\WsaQueryTest(2022).vcxproj" /p:Configuration=Debug /p:Platform=x64
+& $msbuild ".\WsaQueryTest(2026).vcxproj" /p:Configuration=Debug /p:Platform=x64
 ..\out\x64\Debug\WsaQueryTest.exe
 ```
 

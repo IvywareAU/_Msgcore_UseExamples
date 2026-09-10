@@ -12,9 +12,9 @@
   </ItemGroup>
 
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{4C7A1E90-6B32-45D1-9E08-2A6F3C4D5E02}</ProjectGuid>
-    <ProjectName>ListVectTestCom</ProjectName>
-    <RootNamespace>ListVectTestCom</RootNamespace>
+    <ProjectGuid>{4C7A1E90-6B32-45D1-9E08-2A6F3C4D5E08}</ProjectGuid>
+    <ProjectName>BstrWidthTestCom</ProjectName>
+    <RootNamespace>BstrWidthTestCom</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
 
@@ -24,14 +24,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <UseDebugLibraries>true</UseDebugLibraries>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -47,7 +47,7 @@
   <PropertyGroup Label="UserMacros" />
 
   <ItemGroup>
-    <ClCompile Include="ListVectTestCom.cpp" />
+    <ClCompile Include="BstrWidthTestCom.cpp" />
   </ItemGroup>
 
   <ItemGroup>

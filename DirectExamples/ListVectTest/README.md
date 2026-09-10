@@ -86,7 +86,7 @@ while (aRev) { P3PmsgData& o = oList.GetPrev(aRev); ... }
 ## Build and run
 
 ```powershell
-& $msbuild ".\ListVectTest(2022).vcxproj" /p:Configuration=Debug /p:Platform=x64
+& $msbuild ".\ListVectTest(2026).vcxproj" /p:Configuration=Debug /p:Platform=x64
 ..\out\x64\Debug\ListVectTest.exe
 ```
 

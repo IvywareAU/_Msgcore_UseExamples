@@ -27,9 +27,9 @@
   </ItemGroup>
 
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8E1C0A21-4D33-4F10-9A51-0B7C2D3E4F06}</ProjectGuid>
-    <ProjectName>WsaQueryTest</ProjectName>
-    <RootNamespace>WsaQueryTest</RootNamespace>
+    <ProjectGuid>{8E1C0A21-4D33-4F10-9A51-0B7C2D3E4F05}</ProjectGuid>
+    <ProjectName>WsaStoreTest</ProjectName>
+    <RootNamespace>WsaStoreTest</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -40,14 +40,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <UseDebugLibraries>true</UseDebugLibraries>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
 
@@ -70,13 +70,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\obj\$(ProjectName)\</IntDir>
-    <TargetName>WsaQueryTest</TargetName>
+    <TargetName>WsaStoreTest</TargetName>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\obj\$(ProjectName)\</IntDir>
-    <TargetName>WsaQueryTest</TargetName>
+    <TargetName>WsaStoreTest</TargetName>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
 
@@ -102,10 +102,7 @@
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>Msgcore.lib;TargetCore.lib;MsWsock.lib;ws2_32.lib;comsuppwd.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\lib\$(Platform)\$(Configuration);..\..\..\lib\$(Platform);..\..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <!-- NOT delay-loaded, unlike the sibling harnesses. BEGIN_P2PeerMsg_MAP
-           imports the DATA symbol P2PeerHub::P2PeerMsgMap, and the linker
-           refuses /DELAYLOAD on a DLL an image imports data from (LNK1194).
-           _TargetCore_UseExamples\DirectExamples\PipeMsgMapTest drops it for the same reason. -->
+      <DelayLoadDLLs>TargetCore.dll</DelayLoadDLLs>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
@@ -146,10 +143,7 @@ if not exist "$(OutDir)TargetCore.dll" echo POSTBUILD ERROR: TargetCore.dll not 
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>Msgcore.lib;TargetCore.lib;MsWsock.lib;ws2_32.lib;comsuppw.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\lib\$(Platform)\$(Configuration);..\..\..\lib\$(Platform);..\..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <!-- NOT delay-loaded, unlike the sibling harnesses. BEGIN_P2PeerMsg_MAP
-           imports the DATA symbol P2PeerHub::P2PeerMsgMap, and the linker
-           refuses /DELAYLOAD on a DLL an image imports data from (LNK1194).
-           _TargetCore_UseExamples\DirectExamples\PipeMsgMapTest drops it for the same reason. -->
+      <DelayLoadDLLs>TargetCore.dll</DelayLoadDLLs>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
@@ -170,7 +164,7 @@ if not exist "$(OutDir)TargetCore.dll" echo POSTBUILD ERROR: TargetCore.dll not 
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="WsaQueryTest.cpp" />
+    <ClCompile Include="WsaStoreTest.cpp" />
     <ClCompile Include="..\..\..\vsutils\DelayLoadReport.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>  </ItemGroup>
@@ -178,7 +172,7 @@ if not exist "$(OutDir)TargetCore.dll" echo POSTBUILD ERROR: TargetCore.dll not 
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Targetver.h" />
-    <ClInclude Include="WsaQueryTest.h" />
+    <ClInclude Include="WsaStoreTest.h" />
   </ItemGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

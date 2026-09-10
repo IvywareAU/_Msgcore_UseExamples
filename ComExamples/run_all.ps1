@@ -99,7 +99,7 @@ if (-not $NoBuild) {
     # post-build step stages the DLL, so building it out of order fails with a
     # sentence about a missing file rather than a compiler error.
     Write-Host "building MsgFacade ($Config)..."
-    & $msbuild (Join-Path $mscs 'MsgFacade\MsgFacade(2022).vcxproj') `
+    & $msbuild (Join-Path $mscs 'MsgFacade\MsgFacade(2026).vcxproj') `
         -p:Configuration=$Config -p:Platform=x64 -v:minimal -nologo |
         Where-Object { $_ -match 'error|warning C' }
     if ($LASTEXITCODE -ne 0) { throw "MsgFacade build failed" }
@@ -107,19 +107,19 @@ if (-not $NoBuild) {
     # The two servers next: these harnesses compile against their MIDL output
     # and load them at run time.
     Write-Host "building MsgcoreCom ($Config)..."
-    & $msbuild (Join-Path $mscs 'MsgFacade\com\MsgcoreCom(2022).vcxproj') `
+    & $msbuild (Join-Path $mscs 'MsgFacade\com\MsgcoreCom(2026).vcxproj') `
         -p:Configuration=$Config -p:Platform=x64 -v:minimal -nologo |
         Where-Object { $_ -match 'error|warning C' }
     if ($LASTEXITCODE -ne 0) { throw "MsgcoreCom build failed" }
 
     Write-Host "building TargetCom ($Config)..."
-    & $msbuild (Join-Path $mscs 'TargetFacade\com\TargetCom(2022).vcxproj') `
+    & $msbuild (Join-Path $mscs 'TargetFacade\com\TargetCom(2026).vcxproj') `
         -p:Configuration=$Config -p:Platform=x64 -v:minimal -nologo |
         Where-Object { $_ -match 'error|warning C' }
     if ($LASTEXITCODE -ne 0) { throw "TargetCom build failed" }
 
     Write-Host "building harnesses ($Config)..."
-    & $msbuild (Join-Path $here 'ComExamples(2022).sln') `
+    & $msbuild (Join-Path $here 'ComExamples(2026).sln') `
         -p:Configuration=$Config -p:Platform=x64 -v:minimal -nologo -m |
         Where-Object { $_ -match 'error|warning C' }
     if ($LASTEXITCODE -ne 0) { throw "harness build failed" }

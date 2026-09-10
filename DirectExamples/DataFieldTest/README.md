@@ -54,7 +54,7 @@ elsewhere. A caught `P2Pevent` **must** be disposed of one of those three ways.
 ## Build and run
 
 ```powershell
-& $msbuild ".\DataFieldTest(2022).vcxproj" /p:Configuration=Debug /p:Platform=x64
+& $msbuild ".\DataFieldTest(2026).vcxproj" /p:Configuration=Debug /p:Platform=x64
 ..\out\x64\Debug\DataFieldTest.exe
 ```
 

@@ -86,7 +86,7 @@ throw that does get through prints something useful instead of aborting silently
 ## Build and run
 
 ```powershell
-& $msbuild ".\MgrCApiTest(2022).vcxproj" /p:Configuration=Debug /p:Platform=x64
+& $msbuild ".\MgrCApiTest(2026).vcxproj" /p:Configuration=Debug /p:Platform=x64
 ..\out\x64\Debug\MgrCApiTest.exe
 ```
 

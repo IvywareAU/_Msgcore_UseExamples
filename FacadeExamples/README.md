@@ -202,7 +202,7 @@ FacadeExamples/
     LightMesh.h        the extra bits the two mesh harnesses need
   DataFieldTest/  ListVectTest/  MgrPersistTest/  MgrCApiTest/
   RecursTimeTest/ BstrWidthTest/ WsaStoreTest/    WsaQueryTest/
-  FacadeExamples(2022).sln
+  FacadeExamples(2026).sln
   run_all.ps1
 ```
 

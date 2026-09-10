@@ -27,11 +27,14 @@
   </ItemGroup>
 
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9E1C0A21-4D33-4F10-9A51-0B7C2D3E4F02}</ProjectGuid>
-    <ProjectName>ListVectTestLight</ProjectName>
-    <RootNamespace>ListVectTestLight</RootNamespace>
+    <ProjectGuid>{9E1C0A21-4D33-4F10-9A51-0B7C2D3E4F05}</ProjectGuid>
+    <ProjectName>WsaStoreTestLight</ProjectName>
+    <RootNamespace>WsaStoreTestLight</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <!-- This harness speaks to BOTH kernels, so Light.props also brings in
+         TargetFacade. Nothing else about the project changes. -->
+    <LightNeedsMesh>true</LightNeedsMesh>
   </PropertyGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -39,7 +42,7 @@
   <PropertyGroup Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <UseDebugLibraries Condition="'$(Configuration)'=='Debug'">true</UseDebugLibraries>
   </PropertyGroup>
 
@@ -53,7 +56,7 @@
   </ImportGroup>
 
   <ItemGroup>
-    <ClCompile Include="ListVectTest.cpp" />
+    <ClCompile Include="WsaStoreTest.cpp" />
   </ItemGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

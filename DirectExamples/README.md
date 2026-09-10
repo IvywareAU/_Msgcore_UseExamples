@@ -79,16 +79,16 @@ that solution rather than looking for a per-project `.sln` — there isn't one.
 
 ```
 DirectExamples\
-  DirectExamples(2022).sln          all eight
-  <Harness>\<Harness>(2022).vcxproj
+  DirectExamples(2026).sln          all eight
+  <Harness>\<Harness>(2026).vcxproj
   out\x64\{Debug,Release}\                exes + staged DLLs
   out\x64\{Debug,Release}\obj\<Harness>\  intermediates
 ```
 
 ```powershell
-$msbuild = "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe"
-& $msbuild ".\DirectExamples(2022).sln" /p:Configuration=Debug /p:Platform=x64
-& $msbuild ".\DirectExamples(2022).sln" /t:DataFieldTest /p:Configuration=Debug /p:Platform=x64
+$msbuild = "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe"
+& $msbuild ".\DirectExamples(2026).sln" /p:Configuration=Debug /p:Platform=x64
+& $msbuild ".\DirectExamples(2026).sln" /t:DataFieldTest /p:Configuration=Debug /p:Platform=x64
 .\out\x64\Debug\DataFieldTest.exe
 ```
 

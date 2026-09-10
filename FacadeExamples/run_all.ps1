@@ -45,7 +45,7 @@ if (-not $NoBuild) {
     if (-not $msbuild) { throw "MSBuild not found" }
 
     Write-Host "building $Config..."
-    & $msbuild (Join-Path $here 'FacadeExamples(2022).sln') `
+    & $msbuild (Join-Path $here 'FacadeExamples(2026).sln') `
         -p:Configuration=$Config -p:Platform=x64 -v:minimal -nologo -m |
         Where-Object { $_ -match 'error|warning C' }
     if ($LASTEXITCODE -ne 0) { throw "build failed" }

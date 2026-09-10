@@ -104,7 +104,7 @@ class Tree:
 # two while each tree was a repository of its own.
 TREES = [
     Tree(
-        "DirectExamples", "DirectExamples(2022).sln",
+        "DirectExamples", "DirectExamples(2026).sln",
         ["README.md", "run_all.ps1"],
         {r"..\..\..\vsutils\DelayLoadReport.cpp"},
         {
@@ -122,7 +122,7 @@ TREES = [
     # MIDL output directory of TargetCom, which the two networked harnesses
     # name directly.
     Tree(
-        "ComExamples", "ComExamples(2022).sln",
+        "ComExamples", "ComExamples(2026).sln",
         ["README.md", "run_all.ps1"],
         set(), {"$(TargetComGen)"},
         # A raw string cannot end in a backslash, hence the doubled ones.
@@ -132,7 +132,7 @@ TREES = [
         },
     ),
     Tree(
-        "FacadeExamples", "FacadeExamples(2022).sln",
+        "FacadeExamples", "FacadeExamples(2026).sln",
         ["README.md", "run_all.ps1"],
         set(), set(),
         props_paths={

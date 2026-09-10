@@ -461,13 +461,13 @@ while the typed selectors fail — the same call succeeds on the field's own
 
 ```
 ComExamples\
-  ComExamples(2022).sln     all eight
+  ComExamples(2026).sln     all eight
   run_all.ps1                                stage + register + run + unregister
   common\ComHarness.h                        the msgc:: client layer (plain COM only)
   common\P2PBridge.h                         the p2p:: half, for harnesses 5 and 6
   script\ps_client.ps1                       the late-bound client (-IncludeScripts)
   common\HarnessCom.props                    shared build settings
-  <Harness>\<Harness>(2022).vcxproj
+  <Harness>\<Harness>(2026).vcxproj
   out\x64\{Debug,Release}\                   exes + the STAGED servers
   logs\{Debug,Release}\                      one log per harness
 ```

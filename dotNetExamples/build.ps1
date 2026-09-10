@@ -143,8 +143,8 @@ $stage = @(
 foreach ($dll in $stage) {
     if (-not (Test-Path $dll)) {
         throw ("missing $dll`n" +
-               "Build MsgFacade\com\MsgcoreCom(2022).vcxproj and " +
-               "TargetFacade\com\TargetCom(2022).vcxproj for $Config|x64 first " +
+               "Build MsgFacade\com\MsgcoreCom(2026).vcxproj and " +
+               "TargetFacade\com\TargetCom(2026).vcxproj for $Config|x64 first " +
                "(ComExamples\run_all.ps1 does both).")
     }
     Copy-Item $dll $bin -Force

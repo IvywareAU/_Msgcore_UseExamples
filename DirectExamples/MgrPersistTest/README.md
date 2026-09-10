@@ -89,7 +89,7 @@ only delivery. Arming is per node **and** per mask, and the arms are independent
 ## Build and run
 
 ```powershell
-& $msbuild ".\MgrPersistTest(2022).vcxproj" /p:Configuration=Debug /p:Platform=x64
+& $msbuild ".\MgrPersistTest(2026).vcxproj" /p:Configuration=Debug /p:Platform=x64
 ..\out\x64\Debug\MgrPersistTest.exe
 ```
 

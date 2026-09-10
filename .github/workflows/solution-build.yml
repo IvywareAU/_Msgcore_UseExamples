@@ -151,10 +151,10 @@ defaults:
 jobs:
   build-and-run:
     name: ${{ inputs.configuration }}|x64 (sibling-complete)
-    # windows-2022, NOT windows-latest. The label moved off the VS 2022 image,
-    # and every .vcxproj here names PlatformToolset v143. Same pin, for the same
+    # windows-2025-vs2026, NOT windows-latest. The label moved off the VS 2026 image,
+    # and every .vcxproj here names PlatformToolset v145. Same pin, for the same
     # reason, as the sibling Msgcore and TargetCore workflows.
-    runs-on: windows-2022
+    runs-on: windows-2025-vs2026
 
     env:
       # The parent-solution root assembled on the runner. Every relative path in
@@ -220,11 +220,11 @@ jobs:
         shell: bash
         run: |
           missing=0
-          for p in Msgcore/"Msgcore(2022).vcxproj" \
-                   TargetCore/"TargetCore(2022).vcxproj" \
+          for p in Msgcore/"Msgcore(2026).vcxproj" \
+                   TargetCore/"TargetCore(2026).vcxproj" \
                    Platform/platform.h \
                    vsutils/DelayLoadReport.cpp \
-                   _Msgcore_UseExamples/DirectExamples/"DirectExamples(2022).sln"; do
+                   _Msgcore_UseExamples/DirectExamples/"DirectExamples(2026).sln"; do
             if [ -e "$MSCS/$p" ]; then echo "  ok      $p"
             else echo "  MISSING $p"; missing=1; fi
           done
@@ -283,7 +283,7 @@ jobs:
           $env:WDMSCS_LIB = "$env:MSCS\lib"          # ROOT -- props appends the rest
           New-Item -ItemType Directory -Force -Path $env:WDMSCS_LIB | Out-Null
 
-          & $env:MSBUILD "$env:MSCS\Msgcore\Msgcore(2022).vcxproj" `
+          & $env:MSBUILD "$env:MSCS\Msgcore\Msgcore(2026).vcxproj" `
               /nologo /m:1 /v:minimal `
               /p:Configuration=${{ inputs.configuration }} /p:Platform=x64
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
@@ -314,7 +314,7 @@ jobs:
           $cfg = "${{ inputs.configuration }}"
           $env:WDMSCS_LIB = "$env:MSCS\lib\x64\$cfg"  # LEAF -- used verbatim
 
-          & $env:MSBUILD "$env:MSCS\TargetCore\TargetCore(2022).vcxproj" `
+          & $env:MSBUILD "$env:MSCS\TargetCore\TargetCore(2026).vcxproj" `
               /nologo /m:1 /v:minimal `
               /p:Configuration=$cfg /p:Platform=x64
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
@@ -338,7 +338,7 @@ jobs:
           # /clp:NoSummary keeps each warning on exactly one line. At normal
           # verbosity MSBuild re-lists every warning in its end-of-build summary,
           # so a naive count returns twice the real figure.
-          & $env:MSBUILD "$env:MSCS\_Msgcore_UseExamples\DirectExamples\DirectExamples(2022).sln" `
+          & $env:MSBUILD "$env:MSCS\_Msgcore_UseExamples\DirectExamples\DirectExamples(2026).sln" `
               /nologo /m /v:normal /clp:NoSummary `
               /p:Configuration=${{ inputs.configuration }} /p:Platform=x64 `
               2>&1 | Tee-Object -FilePath build.log

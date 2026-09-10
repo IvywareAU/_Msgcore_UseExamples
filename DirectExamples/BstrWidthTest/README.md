@@ -119,7 +119,7 @@ inventing a policy rather than wiring an existing one. Do not call it.
 ## Build and run
 
 ```powershell
-& $msbuild ".\BstrWidthTest(2022).vcxproj" /p:Configuration=Debug /p:Platform=x64
+& $msbuild ".\BstrWidthTest(2026).vcxproj" /p:Configuration=Debug /p:Platform=x64
 ..\out\x64\Debug\BstrWidthTest.exe
 ```
 

@@ -27,9 +27,9 @@
   </ItemGroup>
 
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8E1C0A21-4D33-4F10-9A51-0B7C2D3E4F05}</ProjectGuid>
-    <ProjectName>WsaStoreTest</ProjectName>
-    <RootNamespace>WsaStoreTest</RootNamespace>
+    <ProjectGuid>{8E1C0A21-4D33-4F10-9A51-0B7C2D3E4F07}</ProjectGuid>
+    <ProjectName>RecursTimeTest</ProjectName>
+    <RootNamespace>RecursTimeTest</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -40,14 +40,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <UseDebugLibraries>true</UseDebugLibraries>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
 
@@ -70,13 +70,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\obj\$(ProjectName)\</IntDir>
-    <TargetName>WsaStoreTest</TargetName>
+    <TargetName>RecursTimeTest</TargetName>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\obj\$(ProjectName)\</IntDir>
-    <TargetName>WsaStoreTest</TargetName>
+    <TargetName>RecursTimeTest</TargetName>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
 
@@ -100,9 +100,8 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
-      <AdditionalDependencies>Msgcore.lib;TargetCore.lib;MsWsock.lib;ws2_32.lib;comsuppwd.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Msgcore.lib;comsuppwd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\lib\$(Platform)\$(Configuration);..\..\..\lib\$(Platform);..\..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <DelayLoadDLLs>TargetCore.dll</DelayLoadDLLs>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
@@ -112,9 +111,7 @@
            missing DLL into a build error instead of a 0xC06D007E at startup. -->
       <Command>xcopy /Y "..\..\..\bin\$(Configuration)64\Msgcore.dll" "$(OutDir)"
 if exist "..\..\..\bin\$(Configuration)64\Msgcore.pdb" xcopy /Y "..\..\..\bin\$(Configuration)64\Msgcore.pdb" "$(OutDir)"
-xcopy /Y "..\..\..\bin\$(Configuration)64\TargetCore.dll" "$(OutDir)"
-if exist "..\..\..\bin\$(Configuration)64\TargetCore.pdb" xcopy /Y "..\..\..\bin\$(Configuration)64\TargetCore.pdb" "$(OutDir)"
-if not exist "$(OutDir)TargetCore.dll" echo POSTBUILD ERROR: TargetCore.dll not found in "..\..\..\bin\$(Configuration)64" -- build TargetCore first. &amp;&amp; exit /b 1</Command>
+if not exist "$(OutDir)Msgcore.dll" echo POSTBUILD ERROR: Msgcore.dll not found in "..\..\..\bin\$(Configuration)64" -- build Msgcore first. &amp;&amp; exit /b 1</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
 
@@ -141,9 +138,8 @@ if not exist "$(OutDir)TargetCore.dll" echo POSTBUILD ERROR: TargetCore.dll not 
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
-      <AdditionalDependencies>Msgcore.lib;TargetCore.lib;MsWsock.lib;ws2_32.lib;comsuppw.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Msgcore.lib;comsuppw.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\lib\$(Platform)\$(Configuration);..\..\..\lib\$(Platform);..\..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <DelayLoadDLLs>TargetCore.dll</DelayLoadDLLs>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
@@ -153,9 +149,7 @@ if not exist "$(OutDir)TargetCore.dll" echo POSTBUILD ERROR: TargetCore.dll not 
            missing DLL into a build error instead of a 0xC06D007E at startup. -->
       <Command>xcopy /Y "..\..\..\bin\$(Configuration)64\Msgcore.dll" "$(OutDir)"
 if exist "..\..\..\bin\$(Configuration)64\Msgcore.pdb" xcopy /Y "..\..\..\bin\$(Configuration)64\Msgcore.pdb" "$(OutDir)"
-xcopy /Y "..\..\..\bin\$(Configuration)64\TargetCore.dll" "$(OutDir)"
-if exist "..\..\..\bin\$(Configuration)64\TargetCore.pdb" xcopy /Y "..\..\..\bin\$(Configuration)64\TargetCore.pdb" "$(OutDir)"
-if not exist "$(OutDir)TargetCore.dll" echo POSTBUILD ERROR: TargetCore.dll not found in "..\..\..\bin\$(Configuration)64" -- build TargetCore first. &amp;&amp; exit /b 1</Command>
+if not exist "$(OutDir)Msgcore.dll" echo POSTBUILD ERROR: Msgcore.dll not found in "..\..\..\bin\$(Configuration)64" -- build Msgcore first. &amp;&amp; exit /b 1</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
 
@@ -164,15 +158,13 @@ if not exist "$(OutDir)TargetCore.dll" echo POSTBUILD ERROR: TargetCore.dll not 
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="WsaStoreTest.cpp" />
-    <ClCompile Include="..\..\..\vsutils\DelayLoadReport.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-    </ClCompile>  </ItemGroup>
+    <ClCompile Include="RecursTimeTest.cpp" />
+  </ItemGroup>
 
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Targetver.h" />
-    <ClInclude Include="WsaStoreTest.h" />
+    <ClInclude Include="RecursTimeTest.h" />
   </ItemGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

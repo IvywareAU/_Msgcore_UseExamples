@@ -78,8 +78,8 @@ what makes the comparison stop working.
 
 Alongside the code, in each tree that has a solution:
 
-- register it in that tree's `.sln` — `DirectExamples(2022).sln`,
-  `FacadeExamples(2022).sln`, `ComExamples(2022).sln` — for **both** configurations. The
+- register it in that tree's `.sln` — `DirectExamples(2026).sln`,
+  `FacadeExamples(2026).sln`, `ComExamples(2026).sln` — for **both** configurations. The
   `ci.yml` invariants job fails on a project no solution builds;
 - in `DirectExamples`, give it a `README.md` in its own directory. All eight have one,
   and the invariants job checks for it. The other three trees document themselves in one

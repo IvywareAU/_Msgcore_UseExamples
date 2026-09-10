@@ -12,9 +12,9 @@ the material.
 
 | Tree | Language | Reaches Msgcore through | Built by |
 | --- | --- | --- | --- |
-| [`DirectExamples`](DirectExamples) | C++ | `Msgcore.lib` and MFC — the C++ classes themselves | `DirectExamples(2022).sln` |
-| [`FacadeExamples`](FacadeExamples) | C++ | `MsgFacade.dll`, a macro-free flat-vtable facade | `FacadeExamples(2022).sln` |
-| [`ComExamples`](ComExamples) | C++ (+ PowerShell) | `MsgcoreCom`, an ATL dual-interface COM server over the facade | `ComExamples(2022).sln` |
+| [`DirectExamples`](DirectExamples) | C++ | `Msgcore.lib` and MFC — the C++ classes themselves | `DirectExamples(2026).sln` |
+| [`FacadeExamples`](FacadeExamples) | C++ | `MsgFacade.dll`, a macro-free flat-vtable facade | `FacadeExamples(2026).sln` |
+| [`ComExamples`](ComExamples) | C++ (+ PowerShell) | `MsgcoreCom`, an ATL dual-interface COM server over the facade | `ComExamples(2026).sln` |
 | [`dotNetExamples`](dotNetExamples) | C# | `MsgcoreCom`, by vtable and late-bound | `build.ps1` (Roslyn `csc`) |
 
 There is **no solution at this root, by design.** Each tree builds on its own —
