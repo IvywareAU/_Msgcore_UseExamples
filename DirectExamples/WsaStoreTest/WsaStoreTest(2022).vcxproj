@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Copyright 2026 Khrustal & Mann
+                MELBOURNE, VICTORIA, AUSTRALIA, 3000
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+   implied. See the License for the specific language governing
+   permissions and limitations under the License.
+--><Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8E1C0A21-4D33-4F10-9A51-0B7C2D3E4F05}</ProjectGuid>
+    <ProjectName>WsaStoreTest</ProjectName>
+    <RootNamespace>WsaStoreTest</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"
+            Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"
+            Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"
+            Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"
+            Label="LocalAppDataPlatform" />
+  </ImportGroup>
+
+  <PropertyGroup Label="UserMacros" />
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\obj\$(ProjectName)\</IntDir>
+    <TargetName>WsaStoreTest</TargetName>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(MSBuildThisFileDirectory)..\out\$(Platform)\$(Configuration)\obj\$(ProjectName)\</IntDir>
+    <TargetName>WsaStoreTest</TargetName>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+
+  <!-- ===== Debug | x64 ===== -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\..\..\Msgcore;..\..\..\TargetCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <AdditionalDependencies>Msgcore.lib;TargetCore.lib;MsWsock.lib;ws2_32.lib;comsuppwd.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\lib\$(Platform)\$(Configuration);..\..\..\lib\$(Platform);..\..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <DelayLoadDLLs>TargetCore.dll</DelayLoadDLLs>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <PostBuildEvent>
+      <!-- Stage the kernel from the shared deploy tree, bin\<Config>64, which is
+           where IW_CustomBuildStep.bat puts the DLLs for both configurations.
+           xcopy exits 0 on a wildcard miss, so the closing check is what turns a
+           missing DLL into a build error instead of a 0xC06D007E at startup. -->
+      <Command>xcopy /Y "..\..\..\bin\$(Configuration)64\Msgcore.dll" "$(OutDir)"
+if exist "..\..\..\bin\$(Configuration)64\Msgcore.pdb" xcopy /Y "..\..\..\bin\$(Configuration)64\Msgcore.pdb" "$(OutDir)"
+xcopy /Y "..\..\..\bin\$(Configuration)64\TargetCore.dll" "$(OutDir)"
+if exist "..\..\..\bin\$(Configuration)64\TargetCore.pdb" xcopy /Y "..\..\..\bin\$(Configuration)64\TargetCore.pdb" "$(OutDir)"
+if not exist "$(OutDir)TargetCore.dll" echo POSTBUILD ERROR: TargetCore.dll not found in "..\..\..\bin\$(Configuration)64" -- build TargetCore first. &amp;&amp; exit /b 1</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+
+  <!-- ===== Release | x64 ===== -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\..\..\Msgcore;..\..\..\TargetCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <AdditionalDependencies>Msgcore.lib;TargetCore.lib;MsWsock.lib;ws2_32.lib;comsuppw.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\lib\$(Platform)\$(Configuration);..\..\..\lib\$(Platform);..\..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <DelayLoadDLLs>TargetCore.dll</DelayLoadDLLs>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <PostBuildEvent>
+      <!-- Stage the kernel from the shared deploy tree, bin\<Config>64, which is
+           where IW_CustomBuildStep.bat puts the DLLs for both configurations.
+           xcopy exits 0 on a wildcard miss, so the closing check is what turns a
+           missing DLL into a build error instead of a 0xC06D007E at startup. -->
+      <Command>xcopy /Y "..\..\..\bin\$(Configuration)64\Msgcore.dll" "$(OutDir)"
+if exist "..\..\..\bin\$(Configuration)64\Msgcore.pdb" xcopy /Y "..\..\..\bin\$(Configuration)64\Msgcore.pdb" "$(OutDir)"
+xcopy /Y "..\..\..\bin\$(Configuration)64\TargetCore.dll" "$(OutDir)"
+if exist "..\..\..\bin\$(Configuration)64\TargetCore.pdb" xcopy /Y "..\..\..\bin\$(Configuration)64\TargetCore.pdb" "$(OutDir)"
+if not exist "$(OutDir)TargetCore.dll" echo POSTBUILD ERROR: TargetCore.dll not found in "..\..\..\bin\$(Configuration)64" -- build TargetCore first. &amp;&amp; exit /b 1</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+
+  <!-- ===== Source files ===== -->
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="WsaStoreTest.cpp" />
+    <ClCompile Include="..\..\..\vsutils\DelayLoadReport.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>  </ItemGroup>
+
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Targetver.h" />
+    <ClInclude Include="WsaStoreTest.h" />
+  </ItemGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>
