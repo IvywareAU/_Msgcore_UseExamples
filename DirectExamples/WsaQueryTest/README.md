@@ -19,7 +19,7 @@ On_ConLoginAck                                     (owns a P2PmsgMgr catalogue)
 | | |
 | --- | --- |
 | **Msgcore** | the catalogue, `RootPath2Object` path lookup, the type tag that makes an answer self-describing, and `P2Pos` as a stable row handle |
-| **TargetCore** | named messages routed by `BEGIN_P2PeerMsg_MAP` — each end only ever sees the messages addressed to it |
+| **Targetcore** | named messages routed by `BEGIN_P2PeerMsg_MAP` — each end only ever sees the messages addressed to it |
 
 ## The protocol
 
@@ -75,22 +75,22 @@ client asking for a name that does not exist would silently lose the link. The
 
 The store is touched only from `On_StoreQuery`, on the server's single pump
 thread, so it needs no lock — one hub, one pump, one thread (see
-[`ArchitectureFAQ.md`](../../../_TargetCore_UseExamples/ArchitectureFAQ.md) Q3–Q6). The
+[`ArchitectureFAQ.md`](../../../_Targetcore_UseExamples/ArchitectureFAQ.md) Q3–Q6). The
 catalogue is built in the constructor, on the main thread, before `SpawnHub()`
 exists to race with it. Give the store a second reader and neither of those holds.
 
 ## This project does not delay-load
 
-Unlike its siblings, `WsaQueryTest` links `TargetCore.dll` normally.
+Unlike its siblings, `WsaQueryTest` links `Targetcore.dll` normally.
 `BEGIN_P2PeerMsg_MAP` imports the **data** symbol `P2PeerHub::P2PeerMsgMap`, and
 the linker refuses `/DELAYLOAD` on a DLL an image imports data from:
 
 ```
-LINK : fatal error LNK1194: cannot delay-load 'TargetCore.dll' due to import of
-data symbol '...P2PeerHub::P2PeerMsgMap'; link without /DELAYLOAD:TargetCore.dll
+LINK : fatal error LNK1194: cannot delay-load 'Targetcore.dll' due to import of
+data symbol '...P2PeerHub::P2PeerMsgMap'; link without /DELAYLOAD:Targetcore.dll
 ```
 
-`_TargetCore_UseExamples\DirectExamples\PipeMsgMapTest` drops it for exactly the same reason.
+`_Targetcore_UseExamples\DirectExamples\PipeMsgMapTest` drops it for exactly the same reason.
 
 ## Build and run
 
@@ -99,7 +99,7 @@ data symbol '...P2PeerHub::P2PeerMsgMap'; link without /DELAYLOAD:TargetCore.dll
 ..\out\x64\Debug\WsaQueryTest.exe
 ```
 
-Needs `TargetCore.dll` as well as `Msgcore.dll` in `..\..\..\bin\<Config>64`.
+Needs `Targetcore.dll` as well as `Msgcore.dll` in `..\..\..\bin\<Config>64`.
 
 Exit `0` success · `1` setup · `2` assert · `3` timeout or a wrong answer.
 Currently **18 checks, 0 failed, 5/5 answered**, Debug and Release.

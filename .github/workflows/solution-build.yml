@@ -20,7 +20,7 @@
 # WHICH TREE THIS BUILDS, AND WHY ONLY ONE
 #
 # This repository holds four trees (README.md). This workflow builds and runs
-# DirectExamples only -- the tree whose siblings are Msgcore and TargetCore.
+# DirectExamples only -- the tree whose siblings are Msgcore and Targetcore.
 # FacadeExamples, ComExamples and dotNetExamples additionally need MsgFacade,
 # its COM server and TargetFacade built and, for two of them, REGISTERED; that
 # is a materially different job and a much longer prerequisite chain, and
@@ -34,16 +34,16 @@
 # it cannot run on push, because two of the four things it needs are not in this
 # repository and one of them is not published anywhere. README.md "The sibling
 # dependencies" describes the coupling in full; the short version is that these
-# projects reach `..\..\..\Msgcore`, `..\..\..\TargetCore`, `..\..\..\lib`,
+# projects reach `..\..\..\Msgcore`, `..\..\..\Targetcore`, `..\..\..\lib`,
 # `..\..\..\bin` and `..\..\..\vsutils` by relative path, assuming they are
 # checked out inside the parent MSCS solution -- three levels and not two,
 # because a project file sits at <repo>/<Tree>/<Harness>/.
 #
-#   Msgcore, TargetCore   PRIVATE repositories. Reachable, given a token -- see
+#   Msgcore, Targetcore   PRIVATE repositories. Reachable, given a token -- see
 #                         the note on MSCS_SIBLING_TOKEN below.
 #   Platform/             Taken from Msgcore's VENDORED copy (Msgcore/Platform),
 #                         which Msgcore's own hygiene job pins to an upstream
-#                         commit. TargetCore's stdafx.h includes
+#                         commit. Targetcore's stdafx.h includes
 #                         "../Msgcore/Platform/platform.h", so it must exist as a peer.
 #   vsutils/              NOT PUBLISHED ANYWHERE. Two of the eight harnesses
 #                         compile ..\..\..\vsutils\DelayLoadReport.cpp, so this
@@ -66,7 +66,7 @@
 # answer.
 #
 # WHAT A GREEN RUN PROVES
-#   * Msgcore and TargetCore build from their own .vcxproj files at the chosen
+#   * Msgcore and Targetcore build from their own .vcxproj files at the chosen
 #     configuration, and DirectExamples' eight harnesses link against them.
 #   * All eight run headless to completion and every one exits 0 -- which for
 #     this tree means roughly 405 individual checks per configuration, since each
@@ -79,7 +79,7 @@
 #   * Nothing about the OTHER configuration. Run it twice if you want both;
 #     Debug and Release have historically differed in timing-sensitive harnesses.
 #   * Nothing about the cores themselves beyond "they compiled". Msgcore and
-#     TargetCore have their own CI, and it is stricter than this.
+#     Targetcore have their own CI, and it is stricter than this.
 #
 # NOTE ON `MSCS_SIBLING_TOKEN`: `github.token` is scoped to THIS repository and
 # cannot read a different private one, so a fine-grained PAT with read access to
@@ -118,12 +118,12 @@ on:
         default: master
         type: string
       targetcore_repo:
-        description: owner/repo providing TargetCore.
+        description: owner/repo providing Targetcore.
         required: false
-        default: IvywareAU/TargetCore
+        default: IvywareAU/Targetcore
         type: string
       targetcore_ref:
-        description: Branch, tag or SHA of TargetCore.
+        description: Branch, tag or SHA of Targetcore.
         required: false
         default: master
         type: string
@@ -153,13 +153,13 @@ jobs:
     name: ${{ inputs.configuration }}|x64 (sibling-complete)
     # windows-2025-vs2026, NOT windows-latest. The label moved off the VS 2026 image,
     # and every .vcxproj here names PlatformToolset v145. Same pin, for the same
-    # reason, as the sibling Msgcore and TargetCore workflows.
+    # reason, as the sibling Msgcore and Targetcore workflows.
     runs-on: windows-2025-vs2026
 
     env:
       # The parent-solution root assembled on the runner. Every relative path in
       # every .vcxproj is resolved against this layout:
-      #   $MSCS/Msgcore  $MSCS/TargetCore  $MSCS/Platform  $MSCS/vsutils
+      #   $MSCS/Msgcore  $MSCS/Targetcore  $MSCS/Platform  $MSCS/vsutils
       #   $MSCS/lib/x64/<Cfg>  $MSCS/bin/<Cfg>64
       #   $MSCS/_Msgcore_UseExamples/DirectExamples
       MSCS: ${{ github.workspace }}/mscs
@@ -184,13 +184,13 @@ jobs:
           token: ${{ secrets.MSCS_SIBLING_TOKEN || github.token }}
           path: mscs/Msgcore
 
-      - name: Check out TargetCore
+      - name: Check out Targetcore
         uses: actions/checkout@v5
         with:
           repository: ${{ inputs.targetcore_repo }}
           ref: ${{ inputs.targetcore_ref }}
           token: ${{ secrets.MSCS_SIBLING_TOKEN || github.token }}
-          path: mscs/TargetCore
+          path: mscs/Targetcore
 
       # Sparse, because the only thing wanted out of the parent tree is one
       # directory, and cloning the whole MSCS working tree to get one 188-line
@@ -209,7 +209,7 @@ jobs:
         run: |
           # Platform/ is not a repository of its own here. Msgcore vendors a copy
           # and its hygiene job pins that copy to an upstream commit, so it is the
-          # authoritative one available to CI. TargetCore's stdafx.h includes
+          # authoritative one available to CI. Targetcore's stdafx.h includes
           # "../Msgcore/Platform/platform.h" and will not compile without it.
           Copy-Item "$env:MSCS/Msgcore/Platform" "$env:MSCS/Platform" -Recurse -Force
           Copy-Item "${{ github.workspace }}/parent/vsutils" "$env:MSCS/vsutils" -Recurse -Force
@@ -221,7 +221,7 @@ jobs:
         run: |
           missing=0
           for p in Msgcore/"Msgcore(2026).vcxproj" \
-                   TargetCore/"TargetCore(2026).vcxproj" \
+                   Targetcore/"Targetcore(2026).vcxproj" \
                    Platform/platform.h \
                    vsutils/DelayLoadReport.cpp \
                    _Msgcore_UseExamples/DirectExamples/"DirectExamples(2026).sln"; do
@@ -234,7 +234,7 @@ jobs:
             echo "built and nothing was verified. Check that vsutils_repo names a"
             echo "repository carrying vsutils/ at its root, and that the"
             echo "MSCS_SIBLING_TOKEN secret grants read access to the private"
-            echo "Msgcore and TargetCore repositories -- without it those checkouts"
+            echo "Msgcore and Targetcore repositories -- without it those checkouts"
             echo "fail with a 404 that looks like a missing repository."
             echo "See _Msgcore_UseExamples/README.md, 'The sibling dependencies'."
             echo "The solution built here is DirectExamples; the other three trees"
@@ -261,18 +261,18 @@ jobs:
       #   Msgcore     has a Directory.Build.props that, in a standalone clone,
       #               APPENDS \$(Platform)\$(Configuration) to whatever it is
       #               given. So it is handed the lib ROOT.
-      #   TargetCore  has no such file and uses the variable verbatim, for both
+      #   Targetcore  has no such file and uses the variable verbatim, for both
       #               its <AdditionalLibraryDirectories> and its <ImportLibrary>.
       #               So it is handed the LEAF directory -- the one Msgcore.lib
-      #               is now in, and the one TargetCore.lib must land in.
+      #               is now in, and the one Targetcore.lib must land in.
       #
       # It is set as an ENVIRONMENT variable, never as /p:. An MSBuild global
       # property cannot be reassigned by a PropertyGroup, so /p:WDMSCS_LIB=...
       # would defeat Msgcore's props file and quietly write the import library to
       # the lib root instead of the per-configuration directory.
       #
-      # If TargetCore is ever built with WDMSCS_LIB unset, <ImportLibrary> reads
-      # "\TargetCore.lib" and link.exe writes it to the ROOT OF THE DRIVE with
+      # If Targetcore is ever built with WDMSCS_LIB unset, <ImportLibrary> reads
+      # "\Targetcore.lib" and link.exe writes it to the ROOT OF THE DRIVE with
       # the build still green. Msgcore's Directory.Build.props documents that
       # exact incident. The assertions after each build are what stop it here.
       - name: Build Msgcore ${{ inputs.configuration }}|x64
@@ -306,7 +306,7 @@ jobs:
           Copy-Item "$env:MSCS\Msgcore\out\x64\$cfg\Msgcore.pdb" $bin -Force -ErrorAction SilentlyContinue
           Get-ChildItem $bin | ForEach-Object { Write-Host "  $($_.Name)" }
 
-      - name: Build TargetCore ${{ inputs.configuration }}|x64
+      - name: Build Targetcore ${{ inputs.configuration }}|x64
         run: |
           $ErrorActionPreference = 'Continue'
           $PSNativeCommandUseErrorActionPreference = $false
@@ -314,20 +314,20 @@ jobs:
           $cfg = "${{ inputs.configuration }}"
           $env:WDMSCS_LIB = "$env:MSCS\lib\x64\$cfg"  # LEAF -- used verbatim
 
-          & $env:MSBUILD "$env:MSCS\TargetCore\TargetCore(2026).vcxproj" `
+          & $env:MSBUILD "$env:MSCS\Targetcore\Targetcore(2026).vcxproj" `
               /nologo /m:1 /v:minimal `
               /p:Configuration=$cfg /p:Platform=x64
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-          $lib = "$env:WDMSCS_LIB\TargetCore.lib"
+          $lib = "$env:WDMSCS_LIB\Targetcore.lib"
           if (-not (Test-Path $lib)) {
               Write-Host "::error::$lib was not produced -- the harness link would fail"
               Write-Host "with LNK1181. Check WDMSCS_LIB was visible to this step."
               exit 1
           }
-          Copy-Item "$env:MSCS\TargetCore\out\x64\$cfg\TargetCore.dll" "$env:MSCS\bin\${cfg}64" -Force
-          Copy-Item "$env:MSCS\TargetCore\out\x64\$cfg\TargetCore.pdb" "$env:MSCS\bin\${cfg}64" -Force -ErrorAction SilentlyContinue
-          Write-Host "staged $lib and TargetCore.dll"
+          Copy-Item "$env:MSCS\Targetcore\out\x64\$cfg\Targetcore.dll" "$env:MSCS\bin\${cfg}64" -Force
+          Copy-Item "$env:MSCS\Targetcore\out\x64\$cfg\Targetcore.pdb" "$env:MSCS\bin\${cfg}64" -Force -ErrorAction SilentlyContinue
+          Write-Host "staged $lib and Targetcore.dll"
 
       # ---- the harnesses ---------------------------------------------------
       - name: Build the eight harnesses

@@ -27,7 +27,7 @@
 //
 // Neither knows about the other. The store becomes a byte array and the byte
 // array becomes a payload, and that is the whole of the join -- which is
-// exactly the relationship Msgcore and TargetCore have one tier down, preserved
+// exactly the relationship Msgcore and Targetcore have one tier down, preserved
 // rather than papered over.
 //
 // THE ROUND TRIP THROUGH A FILE IS NOT LAZINESS. A P2PmsgMgr's heap is already

@@ -20,7 +20,7 @@
 # WHY IT EXISTS. This repository holds FOUR trees -- DirectExamples,
 # ComExamples, FacadeExamples and dotNetExamples -- which are the same eight
 # subjects reached through four different bindings (README.md). None of them
-# builds standalone: Msgcore/, MsgFacade/, TargetCore/, TargetFacade/ and
+# builds standalone: Msgcore/, MsgFacade/, Targetcore/, TargetFacade/ and
 # vsutils/ are peer directories of a parent MSCS solution that is not published
 # here. So a per-push workflow has a choice between verifying nothing and
 # verifying bookkeeping, and bookkeeping is worth more than zero -- four of the
@@ -109,7 +109,7 @@ TREES = [
         {r"..\..\..\vsutils\DelayLoadReport.cpp"},
         {
             r"..\..\..\Msgcore",
-            r"..\..\..\TargetCore",
+            r"..\..\..\Targetcore",
             r"..\..\..\lib\$(Platform)\$(Configuration)",
             r"..\..\..\lib\$(Platform)",
             r"..\..\..\lib",
@@ -377,7 +377,7 @@ def check_markdown_links() -> None:
                 continue
             resolved = (md.parent / target).resolve()
             # A link that leaves the repository entirely -- the sibling
-            # _TargetCore_UseExamples repository, or MsgFacade\, which resolve
+            # _Targetcore_UseExamples repository, or MsgFacade\, which resolve
             # inside the parent MSCS tree and cannot resolve in a standalone
             # clone. Failing on those would be failing on the documented layout.
             # Links BETWEEN the four trees stay inside and ARE checked.

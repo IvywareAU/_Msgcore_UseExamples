@@ -65,7 +65,7 @@ static void BuildSmallTree ( Store& st )
 //
 // The original's P3PmsgBSTR was "a heap, a named root item, and a fixed set of
 // well-known sections" -- and P2PmsgMgr was that with a file attached.
-// TargetCore's P2PeerMsg derives from the same class: an envelope IS one of
+// Targetcore's P2PeerMsg derives from the same class: an envelope IS one of
 // these.
 //
 // The facade exposes the union of what a CLIENT of a store needs from that: a

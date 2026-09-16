@@ -58,7 +58,7 @@ reads the same in all four:
 Eight MFC-dynamic console harnesses written straight against the exported C++
 classes (`P3PmsgData`, `P3PmsgField`, `P3PmsgList`, `P3PmsgVect`, `P2PmsgMgr`)
 and against the flat C ABI in `Msgcore_c.h`. They link `Msgcore.lib`, and the
-two networked ones link `TargetCore.lib` as well.
+two networked ones link `Targetcore.lib` as well.
 
 This is the reference tree: the other three are measured against it, and it is
 the only one that documents each harness in **its own README** — eight of them,
@@ -122,7 +122,7 @@ checked out inside the parent MSCS solution as `MSCS\_Msgcore_UseExamples`:
 
 | | Reached | Wanted by |
 | - | ------- | --------- |
-| 1 | `..\..\..\Msgcore`, `..\..\..\TargetCore` | headers, at compile time — `DirectExamples` |
+| 1 | `..\..\..\Msgcore`, `..\..\..\Targetcore` | headers, at compile time — `DirectExamples` |
 | 2 | `..\..\..\lib\$(Platform)\$(Configuration)\*.lib` | import libraries, at link time — `DirectExamples` |
 | 3 | `..\..\..\bin\$(Configuration)64\*.dll` | staged by a post-build `xcopy`, at run time |
 | 4 | `..\..\..\vsutils\DelayLoadReport.cpp` | compiled in by the two networked `DirectExamples` harnesses |
@@ -135,7 +135,7 @@ exactly that reason: a level lost in a move fails there, on a runner with no
 compiler, in seconds — instead of surfacing as `LNK1181` on somebody's machine.
 
 `vsutils\` is **not published anywhere**, and `Msgcore`, `MsgFacade`,
-`TargetCore` and `TargetFacade` are private repositories. See
+`Targetcore` and `TargetFacade` are private repositories. See
 [`CONTRIBUTING.md`](CONTRIBUTING.md) and the two workflows for what that means
 for CI.
 
@@ -160,11 +160,11 @@ at all:
 
 ## The other family
 
-The sibling repository [`_TargetCore_UseExamples`](../_TargetCore_UseExamples)
+The sibling repository [`_Targetcore_UseExamples`](../_Targetcore_UseExamples)
 is laid out the same way and covers the other half: **moving messages between
 hubs** rather than what is in one. Where a question here is about the mesh —
 hubs vs pumps, thread affinity, the login handshake — it is answered there, in
-[`ArchitectureFAQ.md`](../_TargetCore_UseExamples/ArchitectureFAQ.md),
+[`ArchitectureFAQ.md`](../_Targetcore_UseExamples/ArchitectureFAQ.md),
 and is not re-explained in this repository.
 
 ---

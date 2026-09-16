@@ -20,7 +20,7 @@
 // message and TargetCom for moving it -- and they are the only place in this
 // tree where the two tiers meet.
 //
-// This is a deliberately small slice of what _TargetCore_UseExamples\ComExamples\common\
+// This is a deliberately small slice of what _Targetcore_UseExamples\ComExamples\common\
 // ComHarness.h wraps: a network, a hub, a topic sink. It is duplicated rather
 // than shared across the two trees because a tree of examples that cannot be
 // built without a sibling tree of examples is not an example of anything.
@@ -29,7 +29,7 @@
 // own pump thread inside the facade, joined by a loopback TCP connection. For
 // anything about the mesh itself -- hubs vs pumps, thread affinity, the login
 // handshake, what happens to an exception in a handler -- read
-// ..\..\..\_TargetCore_UseExamples\ArchitectureFAQ.md; none of it is re-explained here.
+// ..\..\..\_Targetcore_UseExamples\ArchitectureFAQ.md; none of it is re-explained here.
 
 #pragma once
 

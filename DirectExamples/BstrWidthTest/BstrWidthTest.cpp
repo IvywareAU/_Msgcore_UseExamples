@@ -22,7 +22,7 @@
 //
 //   P3PmsgBSTR     a heap, a named root item, and a fixed set of well-known
 //                  sections (Net, Sys, Evt, Wrp, Msg) addressed by flag
-//                  rather than by name. TargetCore's P2PeerMsg derives from
+//                  rather than by name. Targetcore's P2PeerMsg derives from
 //                  it directly -- an envelope IS one of these.
 //
 //   Addr08/16/32/64  the width of every offset inside the heap image. A

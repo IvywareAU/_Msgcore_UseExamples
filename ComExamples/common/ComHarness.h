@@ -21,7 +21,7 @@
 // calls, SysAllocString and a hand-written IDispatch sink. If the layer needed a
 // framework to be usable, that would be worth knowing; it does not.
 //
-// This is the counterpart of _TargetCore_UseExamples\ComExamples\common\ComHarness.h, one tier
+// This is the counterpart of _Targetcore_UseExamples\ComExamples\common\ComHarness.h, one tier
 // down: that one wraps TargetCom (moving messages), this one wraps MsgcoreCom
 // (what is IN a message). The parallel with the C++ original is close enough to
 // read side by side:

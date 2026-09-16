@@ -27,7 +27,7 @@
 # servers depend on Msgcore.dll:
 #
 #       MsgcoreCom.dll  ->  MsgFacade.dll     ->  Msgcore.dll
-#       TargetCom.dll   ->  TargetFacade.dll  ->  TargetCore.dll  ->  Msgcore.dll
+#       TargetCom.dll   ->  TargetFacade.dll  ->  Targetcore.dll  ->  Msgcore.dll
 #
 # MsgFacade.dll is the newer of the two chains: MsgcoreCom used to call Msgcore
 # directly through its flat C ABI and so had one fewer link.
@@ -75,7 +75,7 @@ $logs  = Join-Path $here "logs\$Config"
 # entry point the stale copy never exported. Staging the build output makes this
 # tree depend on what was actually just compiled.
 #
-# TargetCore and TargetFacade still come from the shared folder: this tree does
+# Targetcore and TargetFacade still come from the shared folder: this tree does
 # not build them, and they are reached only through TargetCom.
 $coreBin = if ($Config -eq 'Debug') { Join-Path $mscs 'bin\Debug64' } else { Join-Path $mscs 'bin\Release64' }
 $msgcoreBin    = Join-Path $mscs "Msgcore\out\x64\$Config"
@@ -135,7 +135,7 @@ $stage = @(
     (Join-Path $p2pComDir     'TargetCom.dll'),
     (Join-Path $p2pComDir     'TargetFacade.dll'),
     (Join-Path $msgcoreBin    'Msgcore.dll'),
-    (Join-Path $coreBin       'TargetCore.dll')
+    (Join-Path $coreBin       'Targetcore.dll')
 )
 foreach ($f in $stage) {
     if (-not (Test-Path $f)) { throw "missing $f -- build it first" }

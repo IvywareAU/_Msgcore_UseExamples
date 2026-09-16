@@ -228,7 +228,7 @@ run_all.ps1                   register per-user, run, unregister, tally
 `WsaStoreTest` and `WsaQueryTest` are the only two that need **both** servers —
 `MsgcoreCom` for what is *in* a message, `TargetCom` for moving it. Neither
 server knows about the other; the store becomes a byte array and the byte array
-becomes a payload, which is the same relationship `Msgcore` and `TargetCore`
+becomes a payload, which is the same relationship `Msgcore` and `Targetcore`
 have one tier down.
 
 ## Prerequisites
@@ -241,7 +241,7 @@ and unregisters afterwards):
 ```
 
 `build.ps1` stages `MsgcoreCom.dll`, `TargetCom.dll`, `TargetFacade.dll`,
-`Msgcore.dll` and `TargetCore.dll` into one directory and `run_all.ps1`
+`Msgcore.dll` and `Targetcore.dll` into one directory and `run_all.ps1`
 registers the staged copies — so there is **one** `Msgcore.dll` on the search
 path. Registering the servers where they were built would have each resolve its
 own copy through `LOAD_WITH_ALTERED_SEARCH_PATH`: same bytes, two modules, two

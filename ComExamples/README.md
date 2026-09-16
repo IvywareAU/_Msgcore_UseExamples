@@ -10,8 +10,8 @@ table says why each pass exists:
 
 | Tree | Subject | Reached through |
 | --- | --- | --- |
-| [`_TargetCore_UseExamples\DirectExamples`](../../_TargetCore_UseExamples/DirectExamples) | moving messages between hubs | TargetCore, C++ |
-| [`_TargetCore_UseExamples\ComExamples`](../../_TargetCore_UseExamples/ComExamples) | the same | `TargetCom`, COM |
+| [`_Targetcore_UseExamples\DirectExamples`](../../_Targetcore_UseExamples/DirectExamples) | moving messages between hubs | Targetcore, C++ |
+| [`_Targetcore_UseExamples\ComExamples`](../../_Targetcore_UseExamples/ComExamples) | the same | `TargetCom`, COM |
 | [`DirectExamples`](../DirectExamples) | **what is *in* a message** | Msgcore, C++ |
 | **this tree** | the same | **`MsgcoreCom`, COM** |
 
@@ -144,7 +144,7 @@ line of it calls a vtable method.
 
 Each harness's own header comment is its documentation — the source files are
 heavily commented and carry what the C++ tree puts in per-harness `README.md`
-files. This tree has one README, like [`_TargetCore_UseExamples\ComExamples`](../../_TargetCore_UseExamples/ComExamples).
+files. This tree has one README, like [`_Targetcore_UseExamples\ComExamples`](../../_Targetcore_UseExamples/ComExamples).
 
 ---
 
@@ -159,7 +159,7 @@ files. This tree has one README, like [`_TargetCore_UseExamples\ComExamples`](..
 `run_all.ps1` registers with `regsvr32 /s /n /i:user` — per-user, `HKCU` only, no
 elevation — and always unregisters again.
 
-**Prerequisites:** `Msgcore.dll` and `TargetCore.dll` in `..\..\bin\Debug64` /
+**Prerequisites:** `Msgcore.dll` and `Targetcore.dll` in `..\..\bin\Debug64` /
 `..\..\bin\Release64`, and the `TargetFacade` tree built (harnesses 5 and 6 need
 `TargetCom`). `run_all.ps1` builds both COM servers itself.
 
@@ -169,7 +169,7 @@ with `Get-Content -Encoding Unicode`.
 ### One directory, one `Msgcore.dll`
 
 `run_all.ps1` **stages** `MsgcoreCom.dll`, `TargetCom.dll`, `TargetFacade.dll`,
-`Msgcore.dll` and `TargetCore.dll` into `out\x64\<Config>` and registers the
+`Msgcore.dll` and `Targetcore.dll` into `out\x64\<Config>` and registers the
 staged copies. That is load-bearing, not tidiness — see finding 6.
 
 ### Exit codes
@@ -307,7 +307,7 @@ The two networked harnesses load both servers into one process:
 
 ```
 MsgcoreCom.dll  ->  MsgFacade.dll     ->  Msgcore.dll
-TargetCom.dll   ->  TargetFacade.dll  ->  TargetCore.dll  ->  Msgcore.dll
+TargetCom.dll   ->  TargetFacade.dll  ->  Targetcore.dll  ->  Msgcore.dll
 ```
 
 COM loads an in-proc server with `LOAD_WITH_ALTERED_SEARCH_PATH`, so each server
@@ -473,7 +473,7 @@ ComExamples\
 ```
 
 `common\ComHarness.h` is the counterpart of
-[`_TargetCore_UseExamples\ComExamples\common\ComHarness.h`](../../_TargetCore_UseExamples/ComExamples/common/ComHarness.h),
+[`_Targetcore_UseExamples\ComExamples\common\ComHarness.h`](../../_Targetcore_UseExamples/ComExamples/common/ComHarness.h),
 one tier down, and uses nothing but plain COM to do it — no ATL, no
 `_com_ptr_t`, no `#import`. Every accessor in it is null-safe: a wrapper whose
 creating call failed answers a benign default rather than faulting inside a

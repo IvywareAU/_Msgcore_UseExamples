@@ -19,7 +19,7 @@
 # READ THIS BEFORE TRUSTING A GREEN TICK FROM THIS WORKFLOW.
 #
 # The four trees here are examples OF a library that is not published alongside
-# them. `..\..\..\Msgcore`, `..\..\..\MsgFacade`, `..\..\..\TargetCore`,
+# them. `..\..\..\Msgcore`, `..\..\..\MsgFacade`, `..\..\..\Targetcore`,
 # `..\..\..\TargetFacade`, `..\..\..\lib`, `..\..\..\bin` and
 # `..\..\..\vsutils` are peer directories of a parent solution this repository
 # is checked out inside; they are not submodules and not vendored. README.md

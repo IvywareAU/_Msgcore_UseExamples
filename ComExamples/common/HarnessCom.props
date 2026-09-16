@@ -19,7 +19,7 @@
 
   The one thing worth reading here is what is NOT in it. There is no
   AdditionalDependencies naming a single MSCS import library, and no post-build
-  step staging Msgcore.dll or TargetCore.dll next to the exe. These programs
+  step staging Msgcore.dll or Targetcore.dll next to the exe. These programs
   link ole32/oleaut32/uuid and nothing else; the implementation is found in the
   REGISTRY at run time, in whatever directory the registered server happens to
   live in. That is the distinguishing property of this tree against its two

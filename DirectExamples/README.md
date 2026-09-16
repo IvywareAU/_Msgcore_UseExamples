@@ -4,18 +4,18 @@ Eight single-file console harnesses for `MSCS/Msgcore` — the message **content
 library: a self-describing tree of named, typed cells packed into a
 relocation-safe heap that can be saved, addressed by position, and shipped.
 
-This tree exists because the sibling [`_TargetCore_UseExamples\DirectExamples`](../../_TargetCore_UseExamples/DirectExamples)
-does **not** cover it. Those eleven harnesses are TargetCore examples: they link
+This tree exists because the sibling [`_Targetcore_UseExamples\DirectExamples`](../../_Targetcore_UseExamples/DirectExamples)
+does **not** cover it. Those eleven harnesses are Targetcore examples: they link
 `Msgcore.lib` and include one Msgcore header (`Msgexception.h`, unused), but they
 never touch `P3PmsgData`, `P3PmsgField`, `P3PmsgList`, `P3PmsgVect`, `P2PmsgMgr`
 or `Msgcore_c.h`. Their payloads are opaque byte ranges. This tree starts where
 those stop.
 
-| | `_TargetCore_UseExamples\DirectExamples` | `DirectExamples` |
+| | `_Targetcore_UseExamples\DirectExamples` | `DirectExamples` |
 | --- | --- | --- |
 | Subject | moving messages between hubs | what is *in* a message |
 | Written against | `P2PeerHub`, `P2PeerCon`, `P2PeerMsg` | `P3Pmsg*`, `P2PmsgMgr`, `Msgcore_c.h` |
-| Links | `TargetCore.lib` + `Msgcore.lib` | `Msgcore.lib` (+ `TargetCore.lib` for the last two) |
+| Links | `Targetcore.lib` + `Msgcore.lib` | `Msgcore.lib` (+ `Targetcore.lib` for the last two) |
 | Networking | every harness | the last two only |
 
 The two networked harnesses use the **`WsaMeshTest` mesh**, as asked: two
@@ -23,7 +23,7 @@ The two networked harnesses use the **`WsaMeshTest` mesh**, as asked: two
 over a loopback TCP socket (`P2PeerConWsa` on `127.0.0.1`). For anything about
 the mesh itself — hubs vs pumps, thread affinity, the login handshake, what
 happens to an exception in a handler — read
-[`../../_TargetCore_UseExamples/ArchitectureFAQ.md`](../../_TargetCore_UseExamples/ArchitectureFAQ.md);
+[`../../_Targetcore_UseExamples/ArchitectureFAQ.md`](../../_Targetcore_UseExamples/ArchitectureFAQ.md);
 none of it is re-explained here.
 
 ---
@@ -38,8 +38,8 @@ Read them in this order. Each builds on the one before.
 | 2 | [`ListVectTest`](ListVectTest) | Msgcore | `P3PmsgList` and `P3PmsgVect`, the 32-element spill seam, nesting, and `P3PmsgCurs` generic traversal |
 | 3 | [`MgrPersistTest`](MgrPersistTest) | Msgcore | `P2PmsgMgr`: one heap per tree, `Save`/`Load`, `P2Pos` addressing, path resolution, headless change triggers |
 | 4 | [`MgrCApiTest`](MgrCApiTest) | Msgcore | the same store through the flat C API (`Msgcore_c.h`) — live vs detached handles, handle ownership, and where the wrappers are not exception-safe |
-| 5 | [`WsaStoreTest`](WsaStoreTest) | Msgcore + TargetCore | a whole `P2PmsgMgr` store serialised, sent between two hubs over loopback TCP, and rebuilt on the far side |
-| 6 | [`WsaQueryTest`](WsaQueryTest) | Msgcore + TargetCore | the store stays put and is *queried* across the mesh — `BEGIN_P2PeerMsg_MAP` request/response over `RootPath2Object` |
+| 5 | [`WsaStoreTest`](WsaStoreTest) | Msgcore + Targetcore | a whole `P2PmsgMgr` store serialised, sent between two hubs over loopback TCP, and rebuilt on the far side |
+| 6 | [`WsaQueryTest`](WsaQueryTest) | Msgcore + Targetcore | the store stays put and is *queried* across the mesh — `BEGIN_P2PeerMsg_MAP` request/response over `RootPath2Object` |
 | 7 | [`RecursTimeTest`](RecursTimeTest) | Msgcore | `P2PmsgRecurs`, the recursive subtree walker, and `P3PmsgTime`, the TIME64 cell |
 | 8 | [`BstrWidthTest`](BstrWidthTest) | Msgcore | `P3PmsgBSTR` — the heap under everything — its addressing width, and the paging callbacks |
 
@@ -93,7 +93,7 @@ $msbuild = "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Curren
 ```
 
 **Prerequisite:** `Msgcore.dll` in `..\..\bin\Debug64` / `..\..\bin\Release64`, and
-`TargetCore.dll` too for harnesses 5 and 6. The post-build step stages them next
+`Targetcore.dll` too for harnesses 5 and 6. The post-build step stages them next
 to the exe and *fails the build* if they are missing — `xcopy` exits 0 on a
 wildcard miss, so without that check a missing DLL only shows up as a
 `0xC06D007E` at startup.
@@ -152,7 +152,7 @@ The pattern behind most of them is worth stating once: **these are the paths
 nothing had ever executed.** `P3PmsgList::GetPrev`, `P3PmsgData::c_time()`,
 `P3PmsgBSTR::IsDirty()`, `P2PmsgMgrnn`'s default constructor, `P3PmsgTime` as a
 whole, and 64-bit `P3PmsgBSTR` heaps had no callers anywhere in the repository —
-not in the library, not in `MscsUnitTests`, not in TargetCore. Writing an
+not in the library, not in `MscsUnitTests`, not in Targetcore. Writing an
 example that calls a thing is what turns a declaration into a fact.
 
 ### 1. `P3PmsgList::AddListHead` corrupted the item it added — FIXED
@@ -289,8 +289,8 @@ it. Fixed.
   (`P2PeerMsg.h:36`). A store larger than that needs chunking.
 * `BEGIN_P2PeerMsg_MAP` imports the **data** symbol `P2PeerHub::P2PeerMsgMap`,
   and the linker refuses `/DELAYLOAD` on a DLL an image imports data from
-  (`LNK1194`). `WsaQueryTest` therefore does not delay-load `TargetCore.dll` —
-  the same reason `_TargetCore_UseExamples\DirectExamples\PipeMsgMapTest` does not.
+  (`LNK1194`). `WsaQueryTest` therefore does not delay-load `Targetcore.dll` —
+  the same reason `_Targetcore_UseExamples\DirectExamples\PipeMsgMapTest` does not.
 
 ---
 
@@ -304,9 +304,9 @@ and there is no fallback.
 
 | # | What is reached | Where from | Needed by |
 | - | --------------- | ---------- | --------- |
-| 1 | `..\..\..\Msgcore` and `..\..\..\TargetCore` | headers, at compile time | all eight |
-| 2 | `..\..\..\lib\$(Platform)\$(Configuration)\{Msgcore,TargetCore}.lib` | import libraries, at link time | all eight (`TargetCore.lib` for 5 and 6) |
-| 3 | `..\..\..\bin\$(Configuration)64\{Msgcore,TargetCore}.dll` | staged by a post-build `xcopy`, at run time | all eight |
+| 1 | `..\..\..\Msgcore` and `..\..\..\Targetcore` | headers, at compile time | all eight |
+| 2 | `..\..\..\lib\$(Platform)\$(Configuration)\{Msgcore,Targetcore}.lib` | import libraries, at link time | all eight (`Targetcore.lib` for 5 and 6) |
+| 3 | `..\..\..\bin\$(Configuration)64\{Msgcore,Targetcore}.dll` | staged by a post-build `xcopy`, at run time | all eight |
 | 4 | `..\..\..\vsutils\DelayLoadReport.cpp` | compiled in, to report a `/DELAYLOAD` fault legibly | `WsaStoreTest`, `WsaQueryTest` |
 
 ### What that means for CI

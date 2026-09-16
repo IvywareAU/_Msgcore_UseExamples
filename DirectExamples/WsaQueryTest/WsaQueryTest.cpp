@@ -29,7 +29,7 @@
 //   Msgcore     the catalogue, the path lookup (RootPath2Object), the type
 //               tag that makes an answer self-describing, and P2Pos as the
 //               stable handle the server hands back as a row id
-//   TargetCore  named messages routed by BEGIN_P2PeerMsg_MAP -- the client
+//   Targetcore  named messages routed by BEGIN_P2PeerMsg_MAP -- the client
 //               posts "StoreQuery", the server replies "StoreReply", and
 //               each end only ever sees the messages addressed to it
 //
@@ -200,7 +200,7 @@ protected:
     //
     // Runs on the server hub's pump thread. The store is touched only from
     // here, so it needs no lock: one hub, one pump, one thread (see
-    // _TargetCore_UseExamples\ArchitectureFAQ.md Q3-Q6). Give the store a second
+    // _Targetcore_UseExamples\ArchitectureFAQ.md Q3-Q6). Give the store a second
     // reader and that stops being true.
     //
     msgRESULT On_StoreQuery(P2PeerMsg* pMsg)

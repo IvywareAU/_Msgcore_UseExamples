@@ -3,7 +3,7 @@
 ## Before you spend time on a change
 
 This repository is **not self-contained** — a fresh clone does not compile, because
-`Msgcore/`, `MsgFacade/`, `TargetCore/`, `TargetFacade/` and `vsutils/` are peer
+`Msgcore/`, `MsgFacade/`, `Targetcore/`, `TargetFacade/` and `vsutils/` are peer
 directories in a parent solution that is not published here. The README's ["The sibling
 dependencies"](README.md#the-sibling-dependencies) lists every binding. Until that is
 resolved an outside contributor cannot build what they are changing, which makes anything

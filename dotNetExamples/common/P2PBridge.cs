@@ -16,7 +16,7 @@
 // P2PBridge.cs -- the TargetCom half of the two networked harnesses.
 //
 // The C# counterpart of ComExamples\common\P2PBridge.h, and
-// duplicated from _TargetCore_UseExamples\dotNetExamples\common\TargetComInterop.cs for the same
+// duplicated from _Targetcore_UseExamples\dotNetExamples\common\TargetComInterop.cs for the same
 // reason that one is: a tree of examples that cannot be built without a sibling
 // tree of examples is not an example of anything. Only the members
 // WsaStoreTest and WsaQueryTest use are declared -- this is a slice, not the
@@ -26,7 +26,7 @@
 // MsgcoreCom for what is IN a message, TargetCom for moving it. The mesh is
 // WsaMeshTest's -- two P2PeerHubs in ONE PROCESS, each on its own pump thread
 // inside the facade, joined by a loopback TCP connection. For anything about
-// the mesh itself read ..\..\..\_TargetCore_UseExamples\ArchitectureFAQ.md.
+// the mesh itself read ..\..\..\_Targetcore_UseExamples\ArchitectureFAQ.md.
 //
 // VTABLE ORDER MATTERS HERE TOO, and the slice is not an excuse: a subset is
 // only safe because it is a PREFIX. Every member below appears at the slot the

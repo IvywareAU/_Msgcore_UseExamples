@@ -1,9 +1,9 @@
 # DataFieldTest — the Msgcore data model, from the bottom up
 
-The first harness in the tree. No networking, no TargetCore: it links
+The first harness in the tree. No networking, no Targetcore: it links
 `Msgcore.lib` alone and touches nothing else.
 
-Msgcore is the message **content** library. TargetCore moves trees between
+Msgcore is the message **content** library. Targetcore moves trees between
 hubs; everything about what a message *contains* lives here.
 
 ## What it covers

@@ -15,7 +15,7 @@
 //
 // WsaStoreTest.cpp
 //
-// Msgcore AND TargetCore together: a whole P2PmsgMgr STORE shipped between
+// Msgcore AND Targetcore together: a whole P2PmsgMgr STORE shipped between
 // two hubs over a loopback TCP socket, in one process, and rebuilt on the
 // far side.
 //
@@ -25,9 +25,9 @@
 // the two libraries:
 //
 //     Msgcore     owns the tree and can render it as a flat heap IMAGE
-//     TargetCore  moves an opaque byte range from one hub to another
+//     Targetcore  moves an opaque byte range from one hub to another
 //
-// TargetCore has no idea what is in the payload. It carries bytes. Making
+// Targetcore has no idea what is in the payload. It carries bytes. Making
 // those bytes a Msgcore store is entirely the application's business, and
 // this harness is that application.
 //
@@ -275,7 +275,7 @@ private:
             return;
         }
 
-        // The payload is opaque to TargetCore -- a byte range and a length.
+        // The payload is opaque to Targetcore -- a byte range and a length.
         P2PeerMsg32* pMsg = new P2PeerMsg32(
             kClientAddr, kServerAddr, P2Pmsg_BCast,
             vImage.data(), (P2Psize_t)vImage.size());

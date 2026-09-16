@@ -22,14 +22,14 @@ The division of labour is the point:
 | | |
 | --- | --- |
 | **Msgcore** | owns the tree and renders it as a flat heap image |
-| **TargetCore** | carries an opaque byte range from one hub to another |
+| **Targetcore** | carries an opaque byte range from one hub to another |
 
-TargetCore has no idea what is in the payload. Making those bytes a Msgcore store
+Targetcore has no idea what is in the payload. Making those bytes a Msgcore store
 is entirely the application's business, and this harness is that application.
 
 ## The mesh
 
-Exactly [`_TargetCore_UseExamples\DirectExamples/WsaMeshTest`](../../../_TargetCore_UseExamples/DirectExamples/WsaMeshTest)'s:
+Exactly [`_Targetcore_UseExamples\DirectExamples/WsaMeshTest`](../../../_Targetcore_UseExamples/DirectExamples/WsaMeshTest)'s:
 two `P2PeerHub`s in one process, each on its own `SpawnHub()` pump thread,
 connected by `P2PeerConWsa` over `127.0.0.1:7811`. The server's
 `ServiceFactory` binds and listens; a `Sleep(750)` lets its pump reach
@@ -40,7 +40,7 @@ completes at a different instant, so a message posted before the ack has nowhere
 to go. The send is therefore in `On_ConLoginAck`, on the client only.
 
 For anything else about the mesh, see
-[`../../../_TargetCore_UseExamples/ArchitectureFAQ.md`](../../../_TargetCore_UseExamples/ArchitectureFAQ.md).
+[`../../../_Targetcore_UseExamples/ArchitectureFAQ.md`](../../../_Targetcore_UseExamples/ArchitectureFAQ.md).
 
 ## Why the image goes through a file
 
@@ -86,7 +86,7 @@ is the barrier that makes that safe; the counters are `Interlocked`.
 ..\out\x64\Debug\WsaStoreTest.exe
 ```
 
-Needs `TargetCore.dll` as well as `Msgcore.dll` in `..\..\..\bin\<Config>64`.
+Needs `Targetcore.dll` as well as `Msgcore.dll` in `..\..\..\bin\<Config>64`.
 
 Exit `0` success · `1` setup · `2` assert · `3` timeout or mismatch. Currently
 **13 checks, 0 failed**, Debug and Release.

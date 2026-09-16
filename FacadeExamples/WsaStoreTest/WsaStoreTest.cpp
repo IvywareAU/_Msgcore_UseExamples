@@ -22,9 +22,9 @@
 // the same one the original drew:
 //
 //     Msgcore     owns the tree and can render it as a flat heap IMAGE
-//     TargetCore  moves an opaque byte range from one hub to another
+//     Targetcore  moves an opaque byte range from one hub to another
 //
-// TargetCore has no idea what is in the payload. It carries bytes. Making
+// Targetcore has no idea what is in the payload. It carries bytes. Making
 // those bytes a Msgcore store is entirely the application's business, and this
 // harness is that application -- which is exactly why it is the one file in
 // this tree that includes two facade headers and no kernel header at all.

@@ -124,7 +124,7 @@ if ($failed) { throw "$failed harness(es) failed to compile" }
 # onto MsgFacade, so there is one more DLL in the chain than there used to be:
 #
 #       MsgcoreCom.dll  ->  MsgFacade.dll     ->  Msgcore.dll
-#       TargetCom.dll   ->  TargetFacade.dll  ->  TargetCore.dll  ->  Msgcore.dll
+#       TargetCom.dll   ->  TargetFacade.dll  ->  Targetcore.dll  ->  Msgcore.dll
 $coreBin       = if ($Config -eq 'Debug') { Join-Path $mscs 'bin\Debug64' } else { Join-Path $mscs 'bin\Release64' }
 $msgcoreBin    = Join-Path $mscs "Msgcore\out\x64\$Config"
 $msgFacadeBin  = Join-Path $mscs "MsgFacade\out\x64\$Config"
@@ -137,7 +137,7 @@ $stage = @(
     (Join-Path $p2pComDir     'TargetCom.dll')
     (Join-Path $p2pComDir     'TargetFacade.dll')
     (Join-Path $msgcoreBin    'Msgcore.dll')
-    (Join-Path $coreBin       'TargetCore.dll')
+    (Join-Path $coreBin       'Targetcore.dll')
 )
 
 foreach ($dll in $stage) {

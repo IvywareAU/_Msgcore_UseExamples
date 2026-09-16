@@ -13,7 +13,7 @@ trees read side by side. What changes is everything underneath: no MFC, no
                        (flat vtable ABI,   (MFC classes, a packed
                         HRESULT, no macros) offset-addressed heap)
 
-  the two mesh harnesses also ─> TargetFacade.dll ──> TargetCore.dll
+  the two mesh harnesses also ─> TargetFacade.dll ──> Targetcore.dll
 ```
 
 ## Status
@@ -210,7 +210,7 @@ FacadeExamples/
 
 * [`../../MsgFacade`](../../MsgFacade) — the facade these are written against
 * [`../DirectExamples`](../DirectExamples) — the originals
-* [`../../_TargetCore_UseExamples/FacadeExamples`](../../_TargetCore_UseExamples/FacadeExamples) — the
+* [`../../_Targetcore_UseExamples/FacadeExamples`](../../_Targetcore_UseExamples/FacadeExamples) — the
   same exercise for the messaging kernel, over `TargetFacade`
 * [`../ComExamples`](../ComExamples) — the same eight
   subjects through `MsgcoreCom`, the ATL layer

@@ -15,11 +15,11 @@
 //
 // DataFieldTest.cpp
 //
-// The Msgcore DATA MODEL, from the bottom up. No networking, no TargetCore --
+// The Msgcore DATA MODEL, from the bottom up. No networking, no Targetcore --
 // this harness links Msgcore.lib alone and touches nothing else.
 //
 // Msgcore is the message *content* library: a self-describing tree of named,
-// typed cells packed into a relocation-safe heap. TargetCore moves those trees
+// typed cells packed into a relocation-safe heap. Targetcore moves those trees
 // between hubs; everything about what a message CONTAINS lives here.
 //
 // The four ideas, in the order they build on each other:
@@ -62,7 +62,7 @@
 CWinApp theApp;
 
 // -------------------------------------------------------------------------
-// Minimal check harness (same exit-code contract as _TargetCore_UseExamples\DirectExamples).
+// Minimal check harness (same exit-code contract as _Targetcore_UseExamples\DirectExamples).
 // -------------------------------------------------------------------------
 static int g_nChecks = 0;
 static int g_nFailed = 0;

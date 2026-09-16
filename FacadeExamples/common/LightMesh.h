@@ -21,7 +21,7 @@
 // Those two are the only harnesses here that touch both kernels, so they are
 // the only ones that pull in the second facade (TargetFacade). This header is
 // the seam: a timestamped log, a "did it happen yet" gate, and the endpoint
-// composers, all of which the sibling tree ..\..\_TargetCore_UseExamples\FacadeExamples
+// composers, all of which the sibling tree ..\..\_Targetcore_UseExamples\FacadeExamples
 // carries in its own LightHarness.h.
 
 #pragma once

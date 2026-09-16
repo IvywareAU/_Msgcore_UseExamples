@@ -40,7 +40,7 @@
 //     tier reaches it. Section 2.
 //
 //  3. NO BEGIN_P2PeerMsg_MAP, AND THEREFORE NO LNK1194. The C++ harness cannot
-//     delay-load TargetCore.dll, because BEGIN_P2PeerMsg_MAP imports the DATA
+//     delay-load Targetcore.dll, because BEGIN_P2PeerMsg_MAP imports the DATA
 //     symbol P2PeerHub::P2PeerMsgMap and the linker refuses /DELAYLOAD on a DLL
 //     an image imports data from. This program links neither DLL at all -- both
 //     servers are found in the registry -- so the constraint simply does not

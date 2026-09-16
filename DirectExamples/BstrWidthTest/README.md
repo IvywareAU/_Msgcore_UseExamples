@@ -3,7 +3,7 @@
 The last harness. Follows [`RecursTimeTest`](../RecursTimeTest); no networking.
 
 Everything up to here has stood on a heap without naming it. This is that heap:
-`P3PmsgBSTR`, the class both `P2PmsgMgr` and TargetCore's `P2PeerMsg` are built
+`P3PmsgBSTR`, the class both `P2PmsgMgr` and Targetcore's `P2PeerMsg` are built
 from, and the **addressing width** that decides how big every internal offset
 is.
 

@@ -25,7 +25,7 @@
 
   Compare the originals in ..\DirectExamples, whose every project carries
   <UseOfMfc>Dynamic</UseOfMfc>, an include list reaching into Msgcore\ and
-  TargetCore\, and a per-project stdafx.h/.cpp pair.
+  Targetcore\, and a per-project stdafx.h/.cpp pair.
 
   Two harnesses (WsaStoreTest, WsaQueryTest) also speak to the MESSAGING
   kernel, and set LightNeedsMesh=true in their Globals property group. That
@@ -86,7 +86,7 @@
 xcopy /Y /D "$(LightCoreDir)Msgcore.dll" "$(OutDir)"</Command>
       <Command Condition="'$(LightNeedsMesh)'=='true'">xcopy /Y /D "$(MsgFacadeRoot)out\$(Platform)\$(Configuration)\MsgFacade.dll" "$(OutDir)"
 xcopy /Y /D "$(TargetFacadeRoot)out\$(Platform)\$(Configuration)\TargetFacade.dll" "$(OutDir)"
-xcopy /Y /D "$(LightCoreDir)TargetCore.dll" "$(OutDir)"
+xcopy /Y /D "$(LightCoreDir)Targetcore.dll" "$(OutDir)"
 xcopy /Y /D "$(LightCoreDir)Msgcore.dll" "$(OutDir)"</Command>
       <Message>staging facade + kernel DLLs</Message>
     </PostBuildEvent>

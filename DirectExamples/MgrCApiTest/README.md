@@ -93,7 +93,7 @@ throw that does get through prints something useful instead of aborting silently
 Exit `0` success · `2` assert · `3` a check failed. Currently **75 checks, 0
 failed**, Debug and Release.
 
-Next: [`WsaStoreTest`](../WsaStoreTest) — where Msgcore meets TargetCore.
+Next: [`WsaStoreTest`](../WsaStoreTest) — where Msgcore meets Targetcore.
 
 ## License
 
