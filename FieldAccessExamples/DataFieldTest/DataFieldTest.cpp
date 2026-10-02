@@ -26,8 +26,8 @@
 //     OWN value has no name to look up -- MsgFieldRef only reaches CHILDREN.
 //   * section 4's r_Attr(): P3PmsgAttr is not a P3PmsgItem, so no anchor.
 //   * r_Desc().GetCount() / Truncate(): collection calls, not field access.
-// Added: the cell types as named fields (and the one type, short, that has no
-// field form), and the field layer's own refusals beside P3PmsgName's.
+// Added: the cell types as named fields, with matching tags (a short as INT16),
+// and the field layer's own refusals beside P3PmsgName's.
 //
 // The Msgcore DATA MODEL, from the bottom up. No networking, no Targetcore --
 // this harness links Msgcore.lib alone and touches nothing else.
@@ -232,15 +232,16 @@ static void Demo_TypedCells()
     CHECK(Field(oCells, L"wstr").DataType()   == oStr.DataType());
     CHECK(Field(oCells, L"blob").DataType()   == oBlob.DataType());
 
-    // The one cell type with no field form: there is no short overload, so a
-    // short PROMOTES to int and lands as INT32, not as the SHORT tag. A field
-    // that must be stored as a short still needs the long-hand call.
+    // A short is a short: an exact short stores the INT16 tag, read back with
+    // AsShort(). Only an exact match does -- a char or unsigned short PROMOTES
+    // to int and stores INT32, as it would in any C++ overload set.
     Field(oCells, L"short") = (short)7;
-    CHECK(Field(oCells, L"short").DataType() != oShort.DataType());
-    CHECK(Field(oCells, L"short").AsInt() == 7);
-    oCells.DeclareItem(L"short", P3PmsgData((short)7), TRUE);   // plain: no short form
     CHECK(Field(oCells, L"short").DataType() == oShort.DataType());
-    CHECK(oCells.SelectItem(L"short").c_short() == 7);
+    CHECK(Field(oCells, L"short").AsShort() == 7);
+    CHECK(oCells.SelectItem(L"short").c_short() == 7);          // the long-hand agrees
+    Field(oCells, L"ushort") = (unsigned short)7;
+    CHECK(Field(oCells, L"ushort").DataType() == oInt.DataType());
+    CHECK(Refused([&] { (void)Field(oCells, L"short").AsInt(); }));   // own type only
 }
 
 

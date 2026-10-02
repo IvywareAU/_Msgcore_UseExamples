@@ -46,10 +46,10 @@
 //     name, before and after Save/Load.
 //
 // What stays plain: the walker itself (P2PmsgRecurs, Push/Pop/Break), the
-// one-level cursor, the list and vect, every P3PmsgTime cell, Save/Load --
-// and the TIME64 FIELD in section 5. MsgFieldRef has no time type: operator=
-// with a long long stores INT64, and AsInt64() refuses a TIME64 cell. So a
-// P3PmsgTime still goes in through DeclareItem, and section 5 checks both.
+// one-level cursor, the list and vect, the unnamed P3PmsgTime cells of
+// section 4, and Save/Load. Section 5's TIME64 FIELD goes in by name as a
+// MsgTime (msg->Created = MsgTime(t)), which stores the same TIME64 cell a
+// P3PmsgTime does.
 //
 // Verdict is reported by process EXIT CODE:
 //   0 = SUCCESS, 2 = ASSERT, 3 = at least one check failed.
@@ -471,7 +471,8 @@ static void Demo_RecursExposure()
 // consumer can tell a timestamp from a plain 64-bit integer.
 //
 // Entirely plain in the field-access port: every cell here is a free-standing
-// P3PmsgData with no name, and MsgFieldRef.hpp has no time type to offer.
+// P3PmsgData with no name, and the field layer reaches only NAMED fields. A
+// named time is section 5's MsgTime.
 //
 static void Demo_Time()
 {
@@ -548,16 +549,17 @@ static void Demo_Time()
 // and the tag is part of the heap image -- which is what makes a stored
 // timestamp still a timestamp after a round trip to disk.
 //
-// In the field-access port the record's other fields go in by name -- Label,
-// and Stamp, the SAME instant as a plain int64 -- through a typed view. The
-// TIME64 field cannot: MsgFieldRef has no time type, so `= (long long)t`
-// stores INT64 (the tag is lost) and AsInt64() refuses a TIME64 cell. Created
-// therefore still goes in through DeclareItem, and is read with c_time64().
+// In the field-access port every field of the record goes in by name through
+// a typed view: Label; Created, a MsgTime, which is stored as TIME64 exactly
+// as P3PmsgTime would store it; and Stamp, the SAME instant as a plain int64.
+// MsgTime is its own type so that a long long stays an integer, and each
+// reader wants its own type: AsTime() reads Created, AsInt64() refuses it.
 //
 struct Record : MsgView
 {
-    MSG_FIELD ( Label, std::wstring );
-    MSG_FIELD ( Stamp, long long );       // a time_t, but tagged INT64
+    MSG_FIELD ( Label,   std::wstring );
+    MSG_FIELD ( Created, MsgTime );       // TIME64
+    MSG_FIELD ( Stamp,   long long );     // a time_t, but tagged INT64
 };
 
 static void Demo_TimeInTree()
@@ -576,12 +578,10 @@ static void Demo_TimeInTree()
         P2PmsgMgr oMgr(VBLock_Addr64, 4096, 1u << 20);
         oMgr.r_Desc(P3PmsgField::AttrCMD_Create);
 
-        // Plain: there is no time type in MsgFieldRef (see above).
-        oMgr.DeclareItem(L"Created", P3PmsgTime(iWhen));
-
         MsgViewOf<Record> rec(oMgr);
-        rec->Label = L"a record";
-        rec->Stamp = (long long)iWhen;
+        rec->Created = MsgTime(iWhen);          // was DeclareItem(L"Created", P3PmsgTime(iWhen))
+        rec->Label   = L"a record";
+        rec->Stamp   = (long long)iWhen;
 
         {
             P3PmsgField& oBack = oMgr.SelectItem(L"Created");
@@ -594,7 +594,9 @@ static void Demo_TimeInTree()
         CHECK(Field(oMgr, L"Stamp").DataType() == VBLockData_INT64);
         CHECK(rec->Stamp.Get() == (long long)iWhen);
         CHECK(oMgr.SelectItem(L"Stamp").c_time64() == iWhen);   // the long-hand agrees
+        CHECK(rec->Created.Get() == MsgTime(iWhen));
         CHECK(Refused([&] { (void)Field(oMgr, L"Created").AsInt64(); }));
+        CHECK(Refused([&] { (void)Field(oMgr, L"Stamp").AsTime(); }));
 
         oMgr.Save(strPath, true);
     }
@@ -614,6 +616,7 @@ static void Demo_TimeInTree()
         MsgViewOf<Record> rec(oLoaded);
         CHECK(rec->Label.Get() == L"a record");
         CHECK(rec->Stamp.Get() == (long long)iWhen);
+        CHECK(rec->Created.Get().Seconds() == iWhen);
         CHECK(Field(oLoaded, L"Stamp").DataType() == VBLockData_INT64);
     }
 

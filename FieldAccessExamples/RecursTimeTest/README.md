@@ -20,14 +20,16 @@ subjects, same checks, plus new ones; named fields now go through
   can't hold what `SelectItem` returns, because that is the parent's cursor item.
 - §3 binds a view to `oRec.r_item()` at a stop and reads that node's children
   by name; they agree with what the walker's own `r_data()` reports.
-- §5 writes `Label` and an int64 `Stamp` through a view, and checks them across
-  `Save`/`Load`.
+- §5 writes `Label`, the `Created` time and an int64 `Stamp` through a view, and
+  checks them across `Save`/`Load`. `Created` is a `MsgTime`
+  (`rec->Created = MsgTime(t)`), stored as the same `TIME64` cell `P3PmsgTime`
+  makes. `Stamp` is the same instant as a plain `INT64`. Each reader wants its
+  own type, so `AsInt64()` refuses `Created` and `AsTime()` refuses `Stamp`,
+  and §5 checks both.
 
 **Plain on purpose:** the walker, `Push`/`Pop`/`Break`, the one-level cursor, the
-list and vect, every `P3PmsgTime` cell, and the `Created` TIME64 field.
-`MsgFieldRef` has no time type: `= (long long)t` stores `INT64` and loses the
-tag, and `AsInt64()` refuses a `TIME64` cell (*"Field [Created] holds a
-different type"*), which §5 checks.
+list and vect, and §4's unnamed `P3PmsgTime` cells. The field layer reaches only
+named fields.
 
 ## What it covers
 
@@ -135,7 +137,7 @@ Every loop over a `P2PmsgRecurs` in this harness is step-bounded. A traversal
 bug should fail the test, not wedge it — a hung harness blocks the build and
 tells you nothing.
 
-Exit `0` success · `2` assert · `3` a check failed. Currently **75 checks, 0
+Exit `0` success · `2` assert · `3` a check failed. Currently **78 checks, 0
 failed**, Debug and Release (61 in the `DirectExamples` original).
 
 Next: [`BstrWidthTest`](../BstrWidthTest) — the heap underneath all of this.

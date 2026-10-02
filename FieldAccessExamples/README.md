@@ -37,24 +37,25 @@ does not.
 
 | # | Harness | Checks here | Checks in `DirectExamples` | What uses field access |
 | - | ------- | ----------: | -------------------------: | ---------------------- |
-| 1 | [`DataFieldTest`](DataFieldTest) | 103 | 59 | the Order schema as a view; nesting, run-time names, refusals |
+| 1 | [`DataFieldTest`](DataFieldTest) | 104 | 59 | the Order schema as a view; nesting, run-time names, refusals |
 | 2 | [`ListVectTest`](ListVectTest) | 85 | 71 | the telemetry pair as a view; item names read back after a cursor walk |
 | 3 | [`MgrPersistTest`](MgrPersistTest) | 67 | 58 | the inventory as a view; stock by `Field()`; `Erase()` still fires the DELETE trigger |
 | 4 | [`MgrCApiTest`](MgrCApiTest) | 118 | 75 | the C API unchanged; the C++ side meets it on the same store, in memory and on disk |
 | 5 | [`WsaStoreTest`](WsaStoreTest) | 23 | 13 | the store built and, after the wire, read through the same views |
 | 6 | [`WsaQueryTest`](WsaQueryTest) | 36 | 18 | the catalogue as views; the query and reply carry named app fields (`P2PeerAppFields.hpp`) |
-| 7 | [`RecursTimeTest`](RecursTimeTest) | 75 | 61 | the walked tree built through views; a view on the walker's current node |
+| 7 | [`RecursTimeTest`](RecursTimeTest) | 78 | 61 | the walked tree built through views; a view on the walker's current node |
 | 8 | [`BstrWidthTest`](BstrWidthTest) | 94 | 50 | views and `Field()` on 16-, 32- and 64-bit heaps, with identical results |
 
-All 601 checks pass in both Debug and Release. Each harness has its own README
+All 605 checks pass in both Debug and Release. Each harness has its own README
 with a "Field-access port" note.
 
 ---
 
 ## What porting them showed about `MsgFieldRef.hpp`
 
-The ports found no defects. They found four gaps. The first is now closed in
-the header; the other three are worked around and commented at the point of use:
+The ports found no defects. They found four gaps. The first three are now
+closed in the header; the fourth is worked around and commented at the point of
+use:
 
 1. **There was no ready-made anchor for a child item — CLOSED.** `MsgViewOf<T>`
    binds to an item you hold, or to a `MsgFieldAnchor`. Binding to
@@ -74,13 +75,17 @@ the header; the other three are worked around and commented at the point of use:
    found by flag, not by name. An anchor protects only *itself*: its lookup
    still moves the parent's cursor, so a `P3PmsgItem&` that someone else holds
    from `SelectItem` moves with it (`MscsUnitTests`, the `Child` cases).
-2. **There is no time type.** Writing a `long long` stores INT64, not TIME64,
-   and `AsInt64()` refuses a TIME64 cell, even though `c_time64()` accepts both
-   tags. RecursTimeTest keeps `DeclareItem(L"Created", P3PmsgTime(...))` and
-   checks the refusal.
-3. **There is no `short` form.** `Field(x, L"s") = (short)7` is promoted to
-   INT32. A field that must be SHORT still needs `DeclareItem`; DataFieldTest
-   checks both.
+2. **There was no time type — CLOSED.** `MsgTime` is a point in time (seconds
+   since 1970 UTC). `Field(x, L"t") = MsgTime(t)` and `MSG_FIELD(when, MsgTime)`
+   store the TIME64 cell that `P3PmsgTime` makes, and `AsTime()` reads it back.
+   It is its own type, with an explicit constructor, so that a `long long` stays
+   an integer. Each reader wants its own type: `AsInt64()` refuses a TIME64
+   cell and `AsTime()` refuses an INT64 one. RecursTimeTest's `Created` field
+   now goes in as `rec->Created = MsgTime(t)`.
+3. **There was no `short` form — CLOSED.** An exact `short` now stores INT16,
+   read with `AsShort()` or `MSG_FIELD(n, short)`. Only an exact match does:
+   `char`, `unsigned short` and `wchar_t` promote to `int` and still store
+   INT32, as they would in any C++ overload set. DataFieldTest checks both.
 4. **Attributes are out of reach.** `r_Attr()` returns a `P3PmsgAttr`, which is
    not a `P3PmsgItem`, so there is nothing to anchor a view or a `Field()` on.
 

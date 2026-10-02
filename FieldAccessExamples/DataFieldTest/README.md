@@ -11,7 +11,7 @@ The first harness in the tree. No networking, no Targetcore: it links
 > field's own name and cell (§2, §5), attributes (§4 — `P3PmsgAttr` is not a
 > `P3PmsgItem`, so nothing can anchor on it), and collection calls like
 > `GetCount()`/`Truncate()`. Added: the §1 cell types as named fields, with
-> matching tags (a `short` has no field form, so it promotes to `INT32`), a ref
+> matching tags (an exact `short` stores `INT16`; a promoting type stores `INT32`), a ref
 > that survives cursor moves, and the field layer's refusals in §6.
 
 Msgcore is the message **content** library. Targetcore moves trees between
@@ -69,7 +69,7 @@ elsewhere. A caught `P2Pevent` **must** be disposed of one of those three ways.
 ..\out\x64\Debug\DataFieldTest.exe
 ```
 
-Exit `0` success · `2` assert · `3` a check failed. Currently **103 checks, 0
+Exit `0` success · `2` assert · `3` a check failed. Currently **104 checks, 0
 failed**, Debug and Release (the DirectExamples original has 59).
 
 Next: [`ListVectTest`](../ListVectTest) — the containers.
