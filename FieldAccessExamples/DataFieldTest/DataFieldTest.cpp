@@ -24,7 +24,8 @@
 // forms where they show the two agree. What stays plain, and why:
 //   * section 1 cells, section 2's own name+data, section 5's stack: a field's
 //     OWN value has no name to look up -- MsgFieldRef only reaches CHILDREN.
-//   * section 4's r_Attr(): P3PmsgAttr is not a P3PmsgItem, so no anchor.
+//   * section 4's collection calls on r_Attr() (GetCount, IsAttributed). The
+//     attributes themselves go in and out through a typed view now.
 //   * r_Desc().GetCount() / Truncate(): collection calls, not field access.
 // Added: the cell types as named fields, with matching tags (a short as INT16),
 // and the field layer's own refusals beside P3PmsgName's.
@@ -412,9 +413,18 @@ static void Demo_Descendants()
 // marker. The TreeFs layer surfaces this collection as ".attr/" and as POSIX
 // xattrs, precisely because it is out-of-band from the data.
 //
-// Unlike descendants, the collection is NOT created on demand -- you must ask
-// for it with AttrCMD_Create the first time.
+// Unlike descendants, the collection is NOT created on demand by the plain
+// API -- you must ask for it with AttrCMD_Create the first time. The field
+// layer does that for you on the first WRITE: MsgFieldAnchor::Attrs(item)
+// anchors a view on an item's attributes, and Field(x, L"f").Attr(L"a") reaches
+// one attribute of a field. A read creates nothing, as everywhere else.
 //
+struct Calibration : MsgView               // the attributes of a reading
+{
+    MSG_FIELD ( Unit,   std::wstring );
+    MSG_FIELD ( Sensor, int );
+};
+
 static void Demo_Attributes()
 {
     Section(L"4. Attributes -- metadata beside the value");
@@ -422,13 +432,19 @@ static void Demo_Attributes()
     P3PmsgField oTemp(L"Temperature", P3PmsgData((double)21.5));
     CHECK(!oTemp.IsAttributed());
 
-    // Attributes stay PLAIN: r_Attr() is a P3PmsgAttr, which is not a
-    // P3PmsgItem, so there is nothing for Field() or a view to anchor on.
-    oTemp.r_Attr(P3PmsgField::AttrCMD_Create) += P3PmsgField(L"Unit",   P3PmsgData(L"Celsius"));
-    oTemp.r_Attr()                            += P3PmsgField(L"Sensor", P3PmsgData((int)7));
+    MsgViewOf<Calibration> cal(MsgFieldAnchor::Attrs(oTemp));
+    CHECK(!cal->Unit.Exists());
+    CHECK(!oTemp.IsAttributed());              // asking created no attribute set
+
+    // Was: oTemp.r_Attr(AttrCMD_Create) += P3PmsgField(L"Unit", ...), and so on.
+    cal->Unit   = L"Celsius";
+    cal->Sensor = 7;
     oTemp.AssertValid();
 
     CHECK(oTemp.IsAttributed());
+    CHECK(cal->Unit.Get() == L"Celsius");
+    CHECK(cal->Sensor.Get() == 7);
+    // The long-hand calls see the same attributes.
     CHECK(oTemp.r_Attr().Exists(L"Unit"));
     CHECK(oTemp.r_Attr().Exists(L"Sensor"));
     CHECK(!oTemp.r_Attr().Exists(L"Nobody"));
@@ -449,10 +465,15 @@ static void Demo_Attributes()
     CHECK(Field(oTemp, L"Reading").AsReal() == 21.5);
     CHECK(!Field(oTemp, L"Unit").Exists());
 
+    // An attribute of a DESCENDANT, reached from the item it hangs under.
+    Field(oTemp, L"Reading").Attr(L"Quality") = L"good";
+    CHECK(Field(oTemp, L"Reading").Attr(L"Quality").AsText() == L"good");
+    CHECK(!Field(oTemp, L"Reading")[L"Quality"].Exists());     // not a child of Reading
+
     wprintf(L"  Temperature=%.1f  @Unit='%s'  @Sensor=%d\n",
             oTemp.c_double(),
-            oTemp.r_Attr().SelectItem(L"Unit").c_wstr(),
-            oTemp.r_Attr().SelectItem(L"Sensor").c_int());
+            cal->Unit.Get().c_str(),
+            (int)cal->Sensor);
 }
 
 

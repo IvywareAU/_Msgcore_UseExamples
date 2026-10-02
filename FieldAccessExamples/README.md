@@ -37,7 +37,7 @@ does not.
 
 | # | Harness | Checks here | Checks in `DirectExamples` | What uses field access |
 | - | ------- | ----------: | -------------------------: | ---------------------- |
-| 1 | [`DataFieldTest`](DataFieldTest) | 104 | 59 | the Order schema as a view; nesting, run-time names, refusals |
+| 1 | [`DataFieldTest`](DataFieldTest) | 110 | 59 | the Order schema and the attributes as views; nesting, run-time names, refusals |
 | 2 | [`ListVectTest`](ListVectTest) | 85 | 71 | the telemetry pair as a view; item names read back after a cursor walk |
 | 3 | [`MgrPersistTest`](MgrPersistTest) | 67 | 58 | the inventory as a view; stock by `Field()`; `Erase()` still fires the DELETE trigger |
 | 4 | [`MgrCApiTest`](MgrCApiTest) | 118 | 75 | the C API unchanged; the C++ side meets it on the same store, in memory and on disk |
@@ -46,16 +46,15 @@ does not.
 | 7 | [`RecursTimeTest`](RecursTimeTest) | 78 | 61 | the walked tree built through views; a view on the walker's current node |
 | 8 | [`BstrWidthTest`](BstrWidthTest) | 94 | 50 | views and `Field()` on 16-, 32- and 64-bit heaps, with identical results |
 
-All 605 checks pass in both Debug and Release. Each harness has its own README
+All 611 checks pass in both Debug and Release. Each harness has its own README
 with a "Field-access port" note.
 
 ---
 
 ## What porting them showed about `MsgFieldRef.hpp`
 
-The ports found no defects. They found four gaps. The first three are now
-closed in the header; the fourth is worked around and commented at the point of
-use:
+The ports found no defects. They found four gaps, and all four are now closed
+in the header:
 
 1. **There was no ready-made anchor for a child item — CLOSED.** `MsgViewOf<T>`
    binds to an item you hold, or to a `MsgFieldAnchor`. Binding to
@@ -86,8 +85,23 @@ use:
    read with `AsShort()` or `MSG_FIELD(n, short)`. Only an exact match does:
    `char`, `unsigned short` and `wchar_t` promote to `int` and still store
    INT32, as they would in any C++ overload set. DataFieldTest checks both.
-4. **Attributes are out of reach.** `r_Attr()` returns a `P3PmsgAttr`, which is
-   not a `P3PmsgItem`, so there is nothing to anchor a view or a `Field()` on.
+4. **Attributes were out of reach — CLOSED.** `r_Attr()` returns a `P3PmsgAttr`,
+   which is not a `P3PmsgItem`, so there was nothing to anchor on. A ref's path
+   now marks each step as going into the descendants or into the attributes:
+
+   ```cpp
+   Field ( oRoot, L"total" ).Attr ( L"currency" ) = L"AUD";   // one attribute
+   MsgViewOf<Calibration> cal ( MsgFieldAnchor::Attrs ( oTemp ) );
+   cal->Unit = L"Celsius";                                    // a view of all of them
+   msg->total.Attr ( L"currency" );  msg.Attr ( L"schema" );  // from a view
+   ```
+
+   The first write creates the attribute set (`AttrCMD_Create`), and a read
+   creates nothing. Under an attribute come ordinary descendants, so `[]` and
+   `Child()` carry on from there. DataFieldTest §4 uses it. Measured on the way:
+   `P3PmsgAttr`'s `operator bool` stops following a cursor item once the cursor
+   has moved, while `Exists`/`SelectItem` do follow it, so the layer asks only
+   the latter.
 
 Also worth knowing:
 
