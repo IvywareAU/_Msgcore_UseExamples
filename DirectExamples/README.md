@@ -1,6 +1,6 @@
 # `DirectExamples` — worked examples for the **Msgcore** library
 
-Eight single-file console harnesses for `MSCS/Msgcore` — the message **content**
+Nine single-file console harnesses for `MSCS/Msgcore` — the message **content**
 library: a self-describing tree of named, typed cells packed into a
 relocation-safe heap that can be saved, addressed by position, and shipped.
 
@@ -28,7 +28,7 @@ none of it is re-explained here.
 
 ---
 
-## The eight
+## The nine
 
 Read them in this order. Each builds on the one before.
 
@@ -42,6 +42,7 @@ Read them in this order. Each builds on the one before.
 | 6 | [`WsaQueryTest`](WsaQueryTest) | Msgcore + Targetcore | the store stays put and is *queried* across the mesh — `BEGIN_P2PeerMsg_MAP` request/response over `RootPath2Object` |
 | 7 | [`RecursTimeTest`](RecursTimeTest) | Msgcore | `P2PmsgRecurs`, the recursive subtree walker, and `P3PmsgTime`, the TIME64 cell |
 | 8 | [`BstrWidthTest`](BstrWidthTest) | Msgcore | `P3PmsgBSTR` — the heap under everything — its addressing width, and the paging callbacks |
+| 9 | [`FieldAccessTest`](FieldAccessTest) | Msgcore | `MsgFieldRef.hpp`: `Field(item, L"name") = v` and `MSG_FIELD` typed views, the Typed and Bytes codings, and what is refused |
 
 Harnesses 7 and 8 exist to close the coverage gap: between them the eight now
 reach every class in Msgcore that a caller can actually call. What they do
@@ -73,13 +74,13 @@ declared into like any field, and one cursor walks all of it.
 
 ## Building and running
 
-Same shape as the sibling tree: one solution at the root that builds all eight,
+Same shape as the sibling tree: one solution at the root that builds all nine,
 and a single shared `out\` root. Build a single harness with MSBuild's `/t:` on
 that solution rather than looking for a per-project `.sln` — there isn't one.
 
 ```
 DirectExamples\
-  DirectExamples(2026).sln          all eight
+  DirectExamples(2026).sln          all nine
   <Harness>\<Harness>(2026).vcxproj
   out\x64\{Debug,Release}\                exes + staged DLLs
   out\x64\{Debug,Release}\obj\<Harness>\  intermediates
@@ -101,7 +102,7 @@ wildcard miss, so without that check a missing DLL only shows up as a
 Every harness prints its output as UTF-16 (`_setmode(_O_U16TEXT)`), so from
 PowerShell read redirected output with `Get-Content -Encoding Unicode`.
 
-[`run_all.ps1`](run_all.ps1) builds the tree and runs all eight, then prints a
+[`run_all.ps1`](run_all.ps1) builds the tree and runs all nine, then prints a
 pass/fail table:
 
 ```powershell
@@ -304,9 +305,9 @@ and there is no fallback.
 
 | # | What is reached | Where from | Needed by |
 | - | --------------- | ---------- | --------- |
-| 1 | `..\..\..\Msgcore` and `..\..\..\Targetcore` | headers, at compile time | all eight |
-| 2 | `..\..\..\lib\$(Platform)\$(Configuration)\{Msgcore,Targetcore}.lib` | import libraries, at link time | all eight (`Targetcore.lib` for 5 and 6) |
-| 3 | `..\..\..\bin\$(Configuration)64\{Msgcore,Targetcore}.dll` | staged by a post-build `xcopy`, at run time | all eight |
+| 1 | `..\..\..\Msgcore` and `..\..\..\Targetcore` | headers, at compile time | all nine |
+| 2 | `..\..\..\lib\$(Platform)\$(Configuration)\{Msgcore,Targetcore}.lib` | import libraries, at link time | all nine (`Targetcore.lib` for 5 and 6) |
+| 3 | `..\..\..\bin\$(Configuration)64\{Msgcore,Targetcore}.dll` | staged by a post-build `xcopy`, at run time | all nine |
 | 4 | `..\..\..\vsutils\DelayLoadReport.cpp` | compiled in, to report a `/DELAYLOAD` fault legibly | `WsaStoreTest`, `WsaQueryTest` |
 
 ### What that means for CI
@@ -319,7 +320,7 @@ Stated plainly, because a green tick that verified nothing is worse than no tick
   bindings above are still exactly four, and that the shipped Markdown does not
   link to files that are gone.
 * [`solution-build.yml`](../.github/workflows/solution-build.yml) is the one that
-  really builds and really runs the eight, and it is **`workflow_dispatch`-only**
+  really builds and really runs the nine, and it is **`workflow_dispatch`-only**
   because it needs the siblings supplied to it. If they are not, it **fails** — it
   does not print "skipped" and exit `0`.
 

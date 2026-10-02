@@ -13,7 +13,7 @@
 # implied. See the License for the specific language governing
 # permissions and limitations under the License.
 #
-# run_all.ps1 -- build and run all eight harnesses, and report the exit codes.
+# run_all.ps1 -- build and run all nine harnesses, and report the exit codes.
 #
 # Every harness reports its verdict the same way:
 #   0 = SUCCESS   1 = SETUP failure   2 = MFC/CRT assertion   3 = a check failed
@@ -22,7 +22,7 @@
 #   .\run_all.ps1 -Config Release
 #   .\run_all.ps1 -NoBuild
 #
-# All eight are single-process and headless -- there is no interactive harness in
+# All nine are single-process and headless -- there is no interactive harness in
 # this tree and no hardware prerequisite. WsaStoreTest and WsaQueryTest do open
 # loopback TCP sockets (two hubs in one process, P2PeerConWsa on 127.0.0.1), so a
 # host firewall that blocks 127.0.0.1 will show up as their timing out at exit 3
@@ -60,7 +60,8 @@ New-Item -ItemType Directory -Force -Path $logs | Out-Null
 
 $harnesses = @(
     'DataFieldTest', 'ListVectTest', 'MgrPersistTest', 'MgrCApiTest',
-    'WsaStoreTest', 'WsaQueryTest', 'RecursTimeTest', 'BstrWidthTest'
+    'WsaStoreTest', 'WsaQueryTest', 'RecursTimeTest', 'BstrWidthTest',
+    'FieldAccessTest'
 )
 
 $results = [System.Collections.ArrayList]::new()
