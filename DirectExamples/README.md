@@ -44,6 +44,11 @@ Read them in this order. Each builds on the one before.
 | 8 | [`BstrWidthTest`](BstrWidthTest) | Msgcore | `P3PmsgBSTR` — the heap under everything — its addressing width, and the paging callbacks |
 | 9 | [`FieldAccessTest`](FieldAccessTest) | Msgcore | `MsgFieldRef.hpp`: `Field(item, L"name") = v` and `MSG_FIELD` typed views, the Typed and Bytes codings, and what is refused |
 
+Harness 9 shows the field-access forms on their own. The sibling tree
+[`../FieldAccessExamples`](../FieldAccessExamples) applies them to harnesses
+1–8: the same subjects and checks, with every named field reached through
+`msg->name` or `Field()`.
+
 Harnesses 7 and 8 exist to close the coverage gap: between them the eight now
 reach every class in Msgcore that a caller can actually call. What they do
 **not** cover is deliberate — `P2Ptype`, `P2Pc_str`, `P2Pc_vBlob`, `P2Pint__`,

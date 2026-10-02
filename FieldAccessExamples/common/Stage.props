@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Copyright 2026 Khrustal & Mann
+                MELBOURNE, VICTORIA, AUSTRALIA, 3000
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+   implied. See the License for the specific language governing
+   permissions and limitations under the License.
+-->
+<!--
+  Stage.props : stages the kernel DLLs beside every harness's exe.
+
+  The DirectExamples projects do this with a per-configuration xcopy
+  PostBuildEvent. Here all eight share one Copy target instead, because they
+  all stage the SAME files into the SAME out\ directory, and under msbuild -m
+  (run_all.ps1) two xcopys onto one destination fail with a sharing violation.
+  Copy retries that. A missing DLL is a build error that says what to build,
+  not a 0xC06D007E at startup.
+
+  A project that also needs Targetcore.dll (WsaStoreTest, WsaQueryTest) sets
+  StageTargetcore to true before importing this file.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="StageKernel" AfterTargets="Build">
+    <PropertyGroup>
+      <KernelBin>$(MSBuildThisFileDirectory)..\..\..\bin\$(Configuration)64\</KernelBin>
+    </PropertyGroup>
+    <ItemGroup>
+      <KernelDll Include="$(KernelBin)Msgcore.dll" />
+      <KernelDll Include="$(KernelBin)Targetcore.dll" Condition="'$(StageTargetcore)'=='true'" />
+      <KernelPdb Include="$(KernelBin)Msgcore.pdb" Condition="Exists('$(KernelBin)Msgcore.pdb')" />
+      <KernelPdb Include="$(KernelBin)Targetcore.pdb"
+                 Condition="'$(StageTargetcore)'=='true' And Exists('$(KernelBin)Targetcore.pdb')" />
+    </ItemGroup>
+    <Error Condition="!Exists('%(KernelDll.FullPath)')"
+           Text="%(KernelDll.FullPath) is missing: build $(Configuration)|$(Platform) of Msgcore (and Targetcore) first" />
+    <Copy SourceFiles="@(KernelDll);@(KernelPdb)" DestinationFolder="$(OutDir)"
+          SkipUnchangedFiles="true" Retries="10" RetryDelayMilliseconds="250" />
+  </Target>
+
+</Project>

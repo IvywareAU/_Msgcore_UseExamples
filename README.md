@@ -4,15 +4,22 @@ Worked examples for **Msgcore** — the MSCS message *content* library: a
 self-describing tree of named, typed cells packed into a relocation-safe heap
 that can be saved, addressed by position, and shipped.
 
-This repository holds **four trees**. They are not four different subjects —
-they are the **same eight subjects, four times over**, once for each way a
-caller can reach the library. That is the whole point of the layout: put the
-four side by side and the difference you are looking at is the *binding*, never
-the material.
+This repository holds **four binding trees**. They are not four different
+subjects — they are the **same eight subjects, four times over**, once for each
+way a caller can reach the library. That is the whole point of the layout: put
+the four side by side and the difference you are looking at is the *binding*,
+never the material.
+
+A fifth tree, [`FieldAccessExamples`](FieldAccessExamples), is the same eight
+again on the same binding as `DirectExamples`. What varies there is the
+*spelling*: fields are reached by name through `MsgFieldRef.hpp`
+(`msg->name = v`, `Field(item, L"name")`) instead of `DeclareItem` and
+`SelectItem`.
 
 | Tree | Language | Reaches Msgcore through | Built by |
 | --- | --- | --- | --- |
 | [`DirectExamples`](DirectExamples) | C++ | `Msgcore.lib` and MFC — the C++ classes themselves | `DirectExamples(2026).sln` |
+| [`FieldAccessExamples`](FieldAccessExamples) | C++ | the same, with fields reached by name through `MsgFieldRef.hpp` | `FieldAccessExamples(2026).sln` |
 | [`FacadeExamples`](FacadeExamples) | C++ | `MsgFacade.dll`, a macro-free flat-vtable facade | `FacadeExamples(2026).sln` |
 | [`ComExamples`](ComExamples) | C++ (+ PowerShell) | `MsgcoreCom`, an ATL dual-interface COM server over the facade | `ComExamples(2026).sln` |
 | [`dotNetExamples`](dotNetExamples) | C# | `MsgcoreCom`, by vtable and late-bound | `build.ps1` (Roslyn `csc`) |
@@ -64,6 +71,16 @@ This is the reference tree: the other three are measured against it, and it is
 the only one that documents each harness in **its own README** — eight of them,
 linked from the tree README. Read it first.
 
+### [`FieldAccessExamples`](FieldAccessExamples) — the same classes, reached by name
+
+`DirectExamples`' eight, ported to the header-only field-access layer in
+`Msgcore\MsgFieldRef.hpp`. Typed views (`MsgViewOf<T> msg(item); msg->uptime =
+86400;`) cover fixed schemas, and `Field(item, L"name")` covers names known only
+at run time. Each harness keeps its subject and every check. What has no
+field-level equivalent — lists, vects, cursors, the heap, the C API — stays a
+plain call, so the diff against `DirectExamples` shows exactly what the operator
+replaces and what it does not.
+
 ### [`FacadeExamples`](FacadeExamples) — the same thing without the macros
 
 Every harness rewritten on **MsgFacade**, the flat-vtable facade DLL over
@@ -105,6 +122,7 @@ Each tree builds independently and documents its own prerequisites. In outline:
 
 ```powershell
 cd DirectExamples ; .\run_all.ps1                  # build + run Debug
+cd FieldAccessExamples ; .\run_all.ps1
 cd FacadeExamples ; .\run_all.ps1 -Config Release
 cd ComExamples    ; .\run_all.ps1 -IncludeScripts  # also the PowerShell client
 cd dotNetExamples ; .\run_all.ps1
@@ -122,10 +140,10 @@ checked out inside the parent MSCS solution as `MSCS\_Msgcore_UseExamples`:
 
 | | Reached | Wanted by |
 | - | ------- | --------- |
-| 1 | `..\..\..\Msgcore`, `..\..\..\Targetcore` | headers, at compile time — `DirectExamples` |
-| 2 | `..\..\..\lib\$(Platform)\$(Configuration)\*.lib` | import libraries, at link time — `DirectExamples` |
-| 3 | `..\..\..\bin\$(Configuration)64\*.dll` | staged by a post-build `xcopy`, at run time |
-| 4 | `..\..\..\vsutils\DelayLoadReport.cpp` | compiled in by the two networked `DirectExamples` harnesses |
+| 1 | `..\..\..\Msgcore`, `..\..\..\Targetcore` | headers, at compile time — `DirectExamples`, `FieldAccessExamples` |
+| 2 | `..\..\..\lib\$(Platform)\$(Configuration)\*.lib` | import libraries, at link time — `DirectExamples`, `FieldAccessExamples` |
+| 3 | `..\..\..\bin\$(Configuration)64\*.dll` | staged at run time — a post-build `xcopy`, or `FieldAccessExamples\common\Stage.props` |
+| 4 | `..\..\..\vsutils\DelayLoadReport.cpp` | compiled in by the two networked harnesses of `DirectExamples` and `FieldAccessExamples` |
 | 5 | `..\..\..\MsgFacade`, `..\..\..\TargetFacade` | the facade and the two COM servers — the other three trees |
 
 **Three leading `..\` and not two.** Each tree used to be a repository of its
@@ -148,7 +166,7 @@ at all:
 
 * **`ci.yml`** runs on every push and **compiles nothing.** It runs
   `.github/ci/check_repo_invariants.py`, which checks bookkeeping only:
-  solution/project parity for both configurations in all three MSBuild trees,
+  solution/project parity for both configurations in all four MSBuild trees,
   that every source named exists, that the pinned outward paths and the paths
   built in the `.props` files are unchanged, and that the shipped Markdown does
   not link to files that are gone.

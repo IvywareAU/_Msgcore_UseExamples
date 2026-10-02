@@ -116,6 +116,26 @@ TREES = [
         },
         per_harness_readme=True,
     ),
+    # FieldAccessExamples is DirectExamples' eight redone with MsgFieldRef.hpp,
+    # so its projects reach out exactly as DirectExamples' do. The one
+    # difference is staging: one Copy target in common\Stage.props instead of
+    # an xcopy per project, and that target's path is pinned by check [4].
+    Tree(
+        "FieldAccessExamples", "FieldAccessExamples(2026).sln",
+        ["README.md", "run_all.ps1", "common/Stage.props"],
+        {r"..\..\..\vsutils\DelayLoadReport.cpp"},
+        {
+            r"..\..\..\Msgcore",
+            r"..\..\..\Targetcore",
+            r"..\..\..\lib\$(Platform)\$(Configuration)",
+            r"..\..\..\lib\$(Platform)",
+            r"..\..\..\lib",
+        },
+        props_paths={
+            "$(MSBuildThisFileDirectory)..\\..\\..\\bin\\$(Configuration)64\\",
+        },
+        per_harness_readme=True,
+    ),
     # ComExamples and FacadeExamples name almost nothing external in their
     # .vcxproj files: the outward paths are properties defined once in
     # common\*.props, which is what check [4] pins. The one exception is the
@@ -220,10 +240,31 @@ def check_solution_parity(tree: Tree) -> dict[str, Path]:
     if not tree.solution.is_file():
         return {}                                   # already reported in [1]
 
-    sln = read(tree.solution)
+    # One solution per Visual Studio generation: (2026) for VS2026/v145, which
+    # run_all.ps1 names, and (2022) for VS2022/v143.  Each lists only the
+    # project files of its own generation, so each .vcxproj is checked against
+    # the solution whose suffix it shares.  Checking every one against the
+    # (2026) solution alone reported every (2022) project as an orphan.
+    # Check [3] reads the projects of the solution run_all.ps1 builds.
+    projects: dict[str, Path] = {}
+    for sln_path in sorted(tree.dir.glob("*.sln")):
+        found = check_one_solution(tree, sln_path)
+        if sln_path.name == tree.solution.name:
+            projects = found
+    return projects
+
+
+SLN_GENERATION_RE = re.compile(r"(\(\d{4}\))\.sln$")
+
+
+def check_one_solution(tree: Tree, sln_path: Path) -> dict[str, Path]:
+    generation = SLN_GENERATION_RE.search(sln_path.name)
+    suffix = f"{generation.group(1)}.vcxproj" if generation else ".vcxproj"
+
+    sln = read(sln_path)
     entries = SLN_PROJECT_RE.findall(sln)
     if not entries:
-        fail("solution", f"{tree.name}: no Project(...) entries parsed -- the "
+        fail("solution", f"{sln_path.name}: no Project(...) entries parsed -- the "
                          f"parser is broken, not the solution")
         return {}
 
@@ -234,19 +275,20 @@ def check_solution_parity(tree: Tree) -> dict[str, Path]:
         projects[name] = path
         guids[name] = guid.upper()
         if not path.is_file():
-            fail("solution", f"{tree.name}: the solution lists '{name}' at "
+            fail("solution", f"{sln_path.name} lists '{name}' at "
                              f"'{relpath}', which does not exist")
 
     # Every .vcxproj on disk must be IN the solution. This is the direction that
     # actually goes wrong: adding a project file and forgetting the solution.
-    on_disk = {p.resolve() for p in tree.dir.glob("*/*.vcxproj")}
+    on_disk = {p.resolve() for p in tree.dir.glob("*/*.vcxproj")
+               if p.name.endswith(suffix)}
     in_sln = {p.resolve() for p in projects.values()}
     for orphan in sorted(on_disk - in_sln):
         fail("solution", f"'{orphan.relative_to(ROOT)}' exists but no solution "
                          f"builds it -- nothing compiles it, so it rots unnoticed")
     if not (on_disk - in_sln):
         ok(f"{tree.name}: all {len(on_disk)} project files on disk are in "
-           f"{tree.solution.name}")
+           f"{sln_path.name}")
 
     # ... and for both configurations. Count this check's own failures rather
     # than testing the global list, which by here may already hold failures from
@@ -260,7 +302,7 @@ def check_solution_parity(tree: Tree) -> dict[str, Path]:
         for cfg in CONFIGURATIONS:
             if cfg not in have:
                 unbuilt += 1
-                fail("solution", f"{tree.name}: '{name}' is not set to BUILD in "
+                fail("solution", f"{sln_path.name}: '{name}' is not set to BUILD in "
                                  f"{cfg} -- it will be silently skipped there")
     if unbuilt == 0:
         ok(f"{tree.name}: all {len(guids)} projects build in "
