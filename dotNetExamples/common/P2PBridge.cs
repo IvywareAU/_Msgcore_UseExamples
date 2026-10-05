@@ -223,7 +223,8 @@ namespace P2P
     public static class Endpoint
     {
         public static string TcpListen (int port)              { return "tcp://:" + port; }
-        public static string TcpDial   (string host, int port) { return "tcp://" + host + ":" + port; }
+        // An IPv6 literal is bracketed so its last group is not read as the port.
+        public static string TcpDial   (string host, int port) { return "tcp://" + (host.IndexOf(':') >= 0 && !host.StartsWith("[") ? "[" + host + "]" : host) + ":" + port; }
     }
 
     /// <summary>IP2PHubCom plus its connection point.</summary>
