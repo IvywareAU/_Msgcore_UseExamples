@@ -116,6 +116,27 @@ of those are properties of .NET rather than of the server.
 
 ---
 
+## Running the harnesses over IPv6
+
+The `WsaQueryTest` and `WsaStoreTest` harnesses in `FacadeExamples`, `ComExamples` and
+`dotNetExamples` move Msgcore documents over TCP on IPv4 loopback (`127.0.0.1`). IPv6 is not on by
+default; it is one endpoint string per side, because they reach TCP through the facade's grammar
+(Targetcore 3.3.0 or later):
+
+| Side | IPv4 (as shipped) | IPv6 |
+|---|---|---|
+| Listen | `TcpListen(port)` → `tcp://:PORT` | `tcp://[::]:PORT` — one socket, IPv6 **and** IPv4 |
+| Dial | `TcpDial(L"127.0.0.1", port)` | `TcpDial(L"::1", port)` → `tcp://[::1]:PORT` |
+
+- `TcpDial` (C++ `LightMesh.h` / `P2PBridge.h`, C# `P2P.Endpoint.TcpDial`) brackets an IPv6 host
+  for you; pass the bare address. The bracketed literal is what selects IPv6.
+- Change the listen first: `TcpListen(port)` is IPv4-only, so an IPv6 dial at it is refused.
+- A name rather than a literal needs `tcp6://host:PORT` (AAAA only) or `tcp46://host:PORT`
+  (either).
+
+Nothing in the Msgcore data model changes with the transport. The full rules are in
+TargetFacade's README, *Switching to IPv6*.
+
 ## Building
 
 Each tree builds independently and documents its own prerequisites. In outline:
